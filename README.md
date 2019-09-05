@@ -165,7 +165,7 @@ Also u can use different options for changing behaviour of app.
 
 ## Version
 
-0.0.5
+0.0.6
 
 ## Requirement
 
