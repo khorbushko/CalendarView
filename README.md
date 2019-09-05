@@ -85,7 +85,7 @@ User different delegates for preparing own version of UI
 
 Example - own UI
 
-```
+``` swift
 extension ViewController: CalendarViewItemProviderDelegate {
 
   func calendarView(didRequestBuildComponentsForRegistration calendarView: CalendarView) -> [CalendarItemPresentable.Type] {
@@ -127,7 +127,7 @@ For details of configuration - please see example and documentation for each cla
 
 Also u can use different options for changing behaviour of app.
 
-```
+``` swift
   /// This option allow some debug prints, usefull for checking behaviour of different calendar
   /// as result u will see date in selected calendar and in gregorian calendar in same line
   public static let debugMode = CalendarAppearenceOption(rawValue: 1 << 0)
