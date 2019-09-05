@@ -25,6 +25,8 @@ Support any calendar supported by native iOS SDK.
 Simply add the following line to your Podfile:
 
 ```ruby
+source 'https://github.com/kirillgorbushko/CalendarView.git'
+
 pod 'CalendarView'
 ```
 
