@@ -49,7 +49,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="12S-AH-sQz" secondAttribute="trailing" id="9EX-Js-7si"/>
                             <constraint firstItem="12S-AH-sQz" firstAttribute="centerY" secondItem="3YM-zW-vkj" secondAttribute="centerY" id="XTw-lu-yCk"/>
@@ -61,6 +61,7 @@
                     </view>
                 </subviews>
             </view>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="3YM-zW-vkj" secondAttribute="trailing" id="AFy-iF-iYo"/>
                 <constraint firstItem="3YM-zW-vkj" firstAttribute="leading" secondItem="ohM-Go-2aZ" secondAttribute="leading" id="QmS-fg-k0t"/>

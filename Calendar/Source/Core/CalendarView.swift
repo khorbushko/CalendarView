@@ -261,7 +261,11 @@ final public class CalendarView: UIView, Nibable {
 
   /// dataSource delegate object
   /// - Version: 0.1
-  public weak var itemProviderDelegate: CalendarViewItemProviderDelegate?
+  public weak var itemProviderDelegate: CalendarViewItemProviderDelegate? {
+    didSet {
+      registerCells()
+    }
+  }
 
   /// layout delegate object
   /// - Version: 0.1
@@ -461,14 +465,13 @@ final public class CalendarView: UIView, Nibable {
 
   // MARK: - Public
 
-  /// Allow to reload all components, also trigger registration of components;
+  /// Allow to reload all components
   ///
   /// Selection of date will be stored
   /// - Version: 0.1
   func forceReload() {
     CATransaction.begin()
     CATransaction.setDisableActions(true)
-      registerCells()
       configureStartIndexForCurrentActiveDate()
     CATransaction.commit()
   }
