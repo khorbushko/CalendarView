@@ -162,11 +162,6 @@ Also u can use different options for changing behaviour of app.
 - range date selection
 - user-defined animation
 
-
-## Version
-
-0.0.6
-
 ## Requirement
 
 - Xcode 10 or higher
