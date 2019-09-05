@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CalendarViewCollectionViewCell" id="ohM-Go-2aZ" customClass="CalendarViewCollectionViewCell" customModule="Calendar" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3YM-zW-vkj" userLabel="Content container View">
+                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="12S-AH-sQz" userLabel="Center View">
+                                <rect key="frame" x="10.5" y="4.5" width="29" height="41.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xAc-Xs-6wn" userLabel="Title Label">
+                                        <rect key="frame" x="0.0" y="0.0" width="29" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sub" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3cl-2S-3Qh" userLabel="Subtitle Label">
+                                        <rect key="frame" x="0.0" y="21" width="29" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="3cl-2S-3Qh" secondAttribute="bottom" id="3PC-9E-j9p"/>
+                                    <constraint firstAttribute="trailing" secondItem="xAc-Xs-6wn" secondAttribute="trailing" id="Ikw-MY-wm8"/>
+                                    <constraint firstAttribute="trailing" secondItem="3cl-2S-3Qh" secondAttribute="trailing" id="cat-is-FYG"/>
+                                    <constraint firstItem="3cl-2S-3Qh" firstAttribute="leading" secondItem="12S-AH-sQz" secondAttribute="leading" id="dOh-W5-Tte"/>
+                                    <constraint firstItem="3cl-2S-3Qh" firstAttribute="top" secondItem="xAc-Xs-6wn" secondAttribute="bottom" id="fqP-vx-Dbs"/>
+                                    <constraint firstItem="xAc-Xs-6wn" firstAttribute="top" secondItem="12S-AH-sQz" secondAttribute="top" id="hIh-O6-Q3u"/>
+                                    <constraint firstItem="xAc-Xs-6wn" firstAttribute="leading" secondItem="12S-AH-sQz" secondAttribute="leading" id="j3R-ji-ytV"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="12S-AH-sQz" secondAttribute="trailing" id="9EX-Js-7si"/>
+                            <constraint firstItem="12S-AH-sQz" firstAttribute="centerY" secondItem="3YM-zW-vkj" secondAttribute="centerY" id="XTw-lu-yCk"/>
+                            <constraint firstItem="12S-AH-sQz" firstAttribute="centerX" secondItem="3YM-zW-vkj" secondAttribute="centerX" id="abS-v2-nQe"/>
+                            <constraint firstItem="12S-AH-sQz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="3YM-zW-vkj" secondAttribute="leading" id="cj5-Hb-ZOy"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="12S-AH-sQz" secondAttribute="bottom" id="gAE-7U-HXA"/>
+                            <constraint firstItem="12S-AH-sQz" firstAttribute="top" relation="greaterThanOrEqual" secondItem="3YM-zW-vkj" secondAttribute="top" id="uN6-bV-KbT"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="3YM-zW-vkj" secondAttribute="trailing" id="AFy-iF-iYo"/>
+                <constraint firstItem="3YM-zW-vkj" firstAttribute="leading" secondItem="ohM-Go-2aZ" secondAttribute="leading" id="QmS-fg-k0t"/>
+                <constraint firstAttribute="bottom" secondItem="3YM-zW-vkj" secondAttribute="bottom" id="U1I-Yw-UZT"/>
+                <constraint firstItem="3YM-zW-vkj" firstAttribute="top" secondItem="ohM-Go-2aZ" secondAttribute="top" id="cQM-sb-xMN"/>
+            </constraints>
+            <connections>
+                <outlet property="centerView" destination="12S-AH-sQz" id="6xm-n7-Tm3"/>
+                <outlet property="contentContainerView" destination="3YM-zW-vkj" id="U3i-jz-ZAM"/>
+                <outlet property="mainSubtitleLabel" destination="3cl-2S-3Qh" id="JyF-Zf-qkO"/>
+                <outlet property="mainTitleLabel" destination="xAc-Xs-6wn" id="rPn-FQ-aQQ"/>
+            </connections>
+            <point key="canvasLocation" x="60.869565217391312" y="132.58928571428572"/>
+        </collectionViewCell>
+    </objects>
+</document>
