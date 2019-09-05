@@ -10,7 +10,7 @@ s.license = "MIT (example)"
 s.author = { "Kyryl" => "kirill.ge@gmail.com" }
 s.homepage = "https://github.com/kirillgorbushko/CalendarView"
 s.source = { :git => "https://github.com/kirillgorbushko/CalendarView.git",
-                :tag => "#{spec.version}" }
+                :tag => "#{s.version}" }
 s.framework = "UIKit"
 s.source_files = "Calendar/Calendar/Source/**/*.{swift}"
 s.resources = "Calendar/Calendar/Source/**/*.{png,jpeg,jpg,storyboard,xib,xcassets}"
