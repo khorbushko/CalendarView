@@ -43,5 +43,5 @@ public struct CalendarAppearenceOption: OptionSet {
   public static let noOption: CalendarAppearenceOption = []
 
   /// Default set of options for calendar - `showEnclosingMonth` and `hightlightCurrentMonth`
-  public static let `default`: CalendarAppearenceOption = [] //[.showEnclosingMonth, .hightlightCurrentMonth, .debugMode]
+  public static let `default`: CalendarAppearenceOption = [.showEnclosingMonth, .hightlightCurrentMonth, .debugMode]
 }
