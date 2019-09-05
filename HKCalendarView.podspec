@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
 s.platform = :ios
 s.ios.deployment_target = '11.0'
-s.name = "CalendarView"
+s.name = "HKCalendarView"
 s.summary = "Calendar control that represent single month view calendar"
 s.requires_arc = true
 s.version = "0.0.1"
