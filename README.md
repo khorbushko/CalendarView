@@ -9,7 +9,10 @@ Support any calendar supported by native iOS SDK.
   <img alt="ICONKit-license" src="https://img.shields.io/badge/license-MIT-green">
   </a>
   <a href="https://github.com/icon-project/ICONKit" target="_blank">
-    <img alt="Platform" src="https://img.shields.io/cocoapods/p/ICONKit.svg">
+    <img alt="Platform" src="https://img.shields.io/badge/platform-iOS-green">
+  </a>
+    <a href="https://github.com/icon-project/ICONKit" target="_blank">
+    <img alt="type" src="https://img.shields.io/badge/status-beta-blue">
   </a>
 </p>
 
