@@ -23,7 +23,7 @@ extension Nibable where Self: UIView {
 
   func prepareView() {
     let nameForXib = xibName()
-    let nibs = Bundle.main.loadNibNamed(nameForXib, owner: self, options: nil)
+    let nibs = Bundle(for: CalendarView.self).loadNibNamed(nameForXib, owner: self, options: nil)
     if let view = nibs?.first as? UIView {
       view.backgroundColor = UIColor.clear
       view.translatesAutoresizingMaskIntoConstraints = false
