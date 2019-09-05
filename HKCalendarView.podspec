@@ -5,11 +5,11 @@ s.ios.deployment_target = '11.0'
 s.name = "HKCalendarView"
 s.summary = "Calendar control that represent single month view calendar"
 s.requires_arc = true
-s.version = "0.0.2"
+s.version = "0.0.6"
 s.license = 'MIT'
 s.author = { "Kyryl" => "kirill.ge@gmail.com" }
 s.homepage = "https://github.com/kirillgorbushko/CalendarView"
-s.source = { :git => "git@github.com:kirillgorbushko/CalendarView.git",
+s.source = { :git => "https://github.com/kirillgorbushko/CalendarView.git",
                 :tag => "#{s.version}" }
 s.framework = "UIKit"
 s.source_files = "Calendar/Source/**/*.{swift}"
