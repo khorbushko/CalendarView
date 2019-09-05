@@ -6,7 +6,7 @@ s.name = "CalendarView"
 s.summary = "Calendar control that represent single month view calendar"
 s.requires_arc = true
 s.version = "0.0.1"
-s.license          = { :type => 'MIT' }
+s.license = 'MIT'
 s.author = { "Kyryl" => "kirill.ge@gmail.com" }
 s.homepage = "https://github.com/kirillgorbushko/CalendarView"
 s.source = { :git => "https://github.com/kirillgorbushko/CalendarView.git",
