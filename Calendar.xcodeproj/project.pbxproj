@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E21E74E23224ED90013ED0E /* CalendarViewContentStretchMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E21E74D23224ED90013ED0E /* CalendarViewContentStretchMode.swift */; };
 		0E2E6214231CECD600D0A062 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2E6213231CECD600D0A062 /* AppDelegate.swift */; };
 		0E2E6216231CECD600D0A062 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2E6215231CECD600D0A062 /* ViewController.swift */; };
 		0E2E6219231CECD600D0A062 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E2E6217231CECD600D0A062 /* Main.storyboard */; };
@@ -40,6 +41,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E21E74D23224ED90013ED0E /* CalendarViewContentStretchMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewContentStretchMode.swift; sourceTree = "<group>"; };
 		0E2E6210231CECD600D0A062 /* Calendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E2E6213231CECD600D0A062 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0E2E6215231CECD600D0A062 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				0E34FEEB231E812F009642EA /* CalendarAppearenceOption.swift */,
 				0E34FEF2231E8A02009642EA /* CalendarDateSelectionOperation.swift */,
 				0E34FEF4231E9682009642EA /* CalendarWeekDayViewPosition.swift */,
+				0E21E74D23224ED90013ED0E /* CalendarViewContentStretchMode.swift */,
 			);
 			path = ConfigurationDescription;
 			sourceTree = "<group>";
@@ -292,6 +295,7 @@
 				0E34FED3231E550E009642EA /* CalendarAnimator.swift in Sources */,
 				0E2E6214231CECD600D0A062 /* AppDelegate.swift in Sources */,
 				0E34FEFB231FC595009642EA /* MyDateItem.swift in Sources */,
+				0E21E74E23224ED90013ED0E /* CalendarViewContentStretchMode.swift in Sources */,
 				0E34FEE6231E7FFB009642EA /* CalendarViewAnimationType.swift in Sources */,
 				0E34FEDC231E6352009642EA /* CalendarDateItem.swift in Sources */,
 				0E2E6234231D3C8600D0A062 /* CalendarMonth.swift in Sources */,

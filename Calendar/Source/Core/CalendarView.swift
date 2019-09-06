@@ -351,6 +351,8 @@ final public class CalendarView: UIView, Nibable {
 
   // MARK: - Layout
 
+  private var stretchMode: CalendarViewContentStretchMode = .fillWidth
+
   private var flowLayout: UICollectionViewFlowLayout? {
     return collectionView.collectionViewLayout as? UICollectionViewFlowLayout
   }
@@ -365,6 +367,11 @@ final public class CalendarView: UIView, Nibable {
   }
 
   private var sectionInset: CGFloat {
+    if stretchMode == .fillWidth {
+      return 0
+    }
+
+    // for center
     return max(0, frame.width - expectedContentSize.width) / 2
   }
 
@@ -477,11 +484,19 @@ final public class CalendarView: UIView, Nibable {
 
   // MARK: - Public
 
+  /// Allow to change stretchMode for `CalendarView`
+  ///
+  /// - Version: 0.1
+  public func changeStretchMode(_ mode: CalendarViewContentStretchMode) {
+    stretchMode = mode
+    forceReload()
+  }
+
   /// Allow to reload all components
   ///
   /// Selection of date will be stored
   /// - Version: 0.1
-  func forceReload() {
+  public func forceReload() {
     CATransaction.begin()
     CATransaction.setDisableActions(true)
       configureStartIndexForCurrentActiveDate()
@@ -490,7 +505,7 @@ final public class CalendarView: UIView, Nibable {
 
   /// Ask to clear all selection in `CalendarView`.
   /// - Version: 0.1
-  func clearSelection() {
+  public func clearSelection() {
     CATransaction.begin()
     CATransaction.setDisableActions(true)
       selectedDates.removeAll()
@@ -977,7 +992,7 @@ extension CalendarView: UICollectionViewDelegate {
           dateFormatter.calendar = Calendar(identifier: .gregorian)
           let gregStringValue = dateFormatter.string(from: interestedDate)
 
-          debugPrint("\n\nSelected - \n\(engineCalendar.identifier) -> \(stringValue)\n\(Calendar.Identifier.gregorian) -> \(gregStringValue)")
+          debugPrint("\n\nclicked on - \n\(engineCalendar.identifier) -> \(stringValue)\n\(Calendar.Identifier.gregorian) -> \(gregStringValue)")
         }
 
         let isDateFromNotSelectedMonth = !displayDatesForCurrentMonth.contains(where: { engineCalendar.isDate($0, inSameDayAs: interestedDate) })
