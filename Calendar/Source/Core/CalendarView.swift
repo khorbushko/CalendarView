@@ -1137,7 +1137,7 @@ extension CalendarView: UICollectionViewDelegateFlowLayout {
       case .fillWidth:
         let expectedCountsInLineFloat = CGFloat(Defines.Calendar.deysInWeek)
         let occupation = expectedCountsInLineFloat * sizeForItem().width
-        let spacing = (collectionView.frame.width - occupation) / (expectedCountsInLineFloat + 1.0)
+        let spacing = (expectedContentSize.width - occupation) / expectedCountsInLineFloat
         return spacing
     }
   }
