@@ -1127,27 +1127,45 @@ extension CalendarView: UICollectionViewDelegateFlowLayout {
   }
 
   public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    return sizeForItem()
+  }
+
+  public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    switch stretchMode {
+      case .center:
+        return Defines.Layout.spacing
+      case .fillWidth:
+        let expectedCountsInLineFloat = CGFloat(Defines.Calendar.deysInWeek)
+        let occupation = expectedCountsInLineFloat * sizeForItem().width
+        let spacing = (collectionView.frame.width - occupation) / (expectedCountsInLineFloat + 1.0)
+        return spacing
+    }
+  }
+
+  public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    return Defines.Layout.spacing
+  }
+
+  // MARK: - Private
+
+  private func sizeForItem() -> CGSize {
     let targetWidth = expectedContentSize.width
     let supportLinesCountForWeekDayName = 1
     let totalSpacing = Defines.Layout.spacing * CGFloat(Defines.Calendar.deysInWeek - 1 + supportLinesCountForWeekDayName)
     let sideSize = (targetWidth - totalSpacing) / CGFloat(Defines.Calendar.deysInWeek)
 
-    var rowsCount = CGFloat(startIndex + displayDates.count) / CGFloat(Defines.Calendar.deysInWeek)
-    if showEnclosingMonths {
-      rowsCount = CGFloat(displayDates.count + dayNamesCount) / CGFloat(Defines.Calendar.deysInWeek)
+    switch stretchMode {
+    case .center:
+      return CGSize(width: sideSize, height: sideSize)
+    case .fillWidth:
+      var rowsCount = CGFloat(startIndex + displayDates.count) / CGFloat(Defines.Calendar.deysInWeek)
+      if showEnclosingMonths {
+        rowsCount = CGFloat(displayDates.count + dayNamesCount) / CGFloat(Defines.Calendar.deysInWeek)
+      }
+
+      let sideHeight = (expectedContentSize.height - totalSpacing) / CGFloat(rowsCount)
+      let target = min(sideHeight, sideSize)
+      return CGSize(width: target, height: target)
     }
-
-    let sideHeight = (expectedContentSize.height - totalSpacing) / CGFloat(rowsCount)
-    let target = min(sideHeight, sideSize)
-
-    return CGSize(width: target, height: target)
-  }
-
-  public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-    return Defines.Layout.spacing
-  }
-
-  public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-    return Defines.Layout.spacing
   }
 }

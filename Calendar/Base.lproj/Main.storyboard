@@ -28,47 +28,47 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XRt-sf-Dfr" customClass="CalendarView" customModule="Calendar" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="104" width="414" height="350"/>
+                                <rect key="frame" x="0.0" y="104" width="414" height="200"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="350" id="8ER-9x-CFz"/>
+                                    <constraint firstAttribute="height" constant="200" id="8ER-9x-CFz"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4y6-Ov-62e">
-                                <rect key="frame" x="0.0" y="454" width="414" height="408"/>
+                                <rect key="frame" x="0.0" y="304" width="414" height="558"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="dSl-JT-mFS">
-                                        <rect key="frame" x="16" y="0.0" width="382" height="408"/>
+                                        <rect key="frame" x="16" y="0.0" width="382" height="514"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sIR-JH-Wit" userLabel="Debug View">
-                                                <rect key="frame" x="0.0" y="0.0" width="382" height="38"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="382" height="50"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="ZoK-GO-Wyc">
-                                                        <rect key="frame" x="0.0" y="0.0" width="382" height="38"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="382" height="50"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QlA-v7-Dhb" userLabel="Prev &lt;">
-                                                                <rect key="frame" x="0.0" y="0.0" width="95.5" height="38"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="95.5" height="50"/>
                                                                 <state key="normal" title="&lt; Prev"/>
                                                                 <connections>
                                                                     <action selector="prevAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qag-0a-LyC"/>
                                                                 </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lz7-6V-LYa" userLabel="Today">
-                                                                <rect key="frame" x="95.5" y="0.0" width="95.5" height="38"/>
+                                                                <rect key="frame" x="95.5" y="0.0" width="95.5" height="50"/>
                                                                 <state key="normal" title="today"/>
                                                                 <connections>
                                                                     <action selector="todayAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0cV-zm-zlh"/>
                                                                 </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jsO-n9-sMp">
-                                                                <rect key="frame" x="191" y="0.0" width="95.5" height="38"/>
+                                                                <rect key="frame" x="191" y="0.0" width="95.5" height="50"/>
                                                                 <state key="normal" title="selected"/>
                                                                 <connections>
                                                                     <action selector="selectedDate:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ng9-ah-Rpo"/>
                                                                 </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m1a-m9-ybK" userLabel="Next &gt;">
-                                                                <rect key="frame" x="286.5" y="0.0" width="95.5" height="38"/>
+                                                                <rect key="frame" x="286.5" y="0.0" width="95.5" height="50"/>
                                                                 <state key="normal" title="Next &gt;"/>
                                                                 <connections>
                                                                     <action selector="nextAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vtH-9H-Ucb"/>
@@ -86,39 +86,39 @@
                                                 </constraints>
                                             </view>
                                             <view alpha="0.25" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oAm-QF-z7P">
-                                                <rect key="frame" x="0.0" y="46" width="382" height="38.5"/>
+                                                <rect key="frame" x="0.0" y="58" width="382" height="50"/>
                                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9P0-l6-RmT">
-                                                <rect key="frame" x="0.0" y="92.5" width="382" height="38"/>
+                                                <rect key="frame" x="0.0" y="116" width="382" height="50"/>
                                                 <state key="normal" title="Gregorian calendar"/>
                                                 <connections>
                                                     <action selector="gregorianCalenda:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Lu0-4G-Sv7"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Icg-9B-PLD">
-                                                <rect key="frame" x="0.0" y="138.5" width="382" height="38.5"/>
+                                                <rect key="frame" x="0.0" y="174" width="382" height="50"/>
                                                 <state key="normal" title="Hijry calendar"/>
                                                 <connections>
                                                     <action selector="hijryCalendar:" destination="BYZ-38-t0r" eventType="touchUpInside" id="85P-kx-nXV"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q41-uq-TPj">
-                                                <rect key="frame" x="0.0" y="185" width="382" height="38"/>
+                                                <rect key="frame" x="0.0" y="232" width="382" height="50"/>
                                                 <state key="normal" title="custom cells"/>
                                                 <connections>
                                                     <action selector="customCells:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GiO-Oc-aM5"/>
                                                 </connections>
                                             </button>
                                             <view alpha="0.25" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zeI-jy-u7q">
-                                                <rect key="frame" x="0.0" y="231" width="382" height="38.5"/>
+                                                <rect key="frame" x="0.0" y="290" width="382" height="50"/>
                                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="baO-5h-IVU">
-                                                <rect key="frame" x="0.0" y="277.5" width="382" height="38"/>
+                                                <rect key="frame" x="0.0" y="348" width="382" height="50"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Year" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="081-s2-ZAn" userLabel="Year">
-                                                        <rect key="frame" x="0.0" y="0.0" width="34" height="38"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="34" height="50"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -132,10 +132,10 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="8F4-pc-HxH">
-                                                <rect key="frame" x="0.0" y="323.5" width="382" height="38.5"/>
+                                                <rect key="frame" x="0.0" y="406" width="382" height="50"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Month" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IAe-lO-jM5">
-                                                        <rect key="frame" x="0.0" y="0.0" width="49.5" height="38.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="49.5" height="50"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -149,16 +149,16 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="vSR-a7-V9j">
-                                                <rect key="frame" x="0.0" y="370" width="382" height="38"/>
+                                                <rect key="frame" x="0.0" y="464" width="382" height="50"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weekday" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="77e-me-Hy0">
-                                                        <rect key="frame" x="0.0" y="0.0" width="70" height="38"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="70" height="50"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="yNC-wn-ofm">
-                                                        <rect key="frame" x="75" y="0.0" width="307" height="39"/>
+                                                        <rect key="frame" x="75" y="0.0" width="307" height="51"/>
                                                         <segments>
                                                             <segment title="none"/>
                                                             <segment title="very short"/>
