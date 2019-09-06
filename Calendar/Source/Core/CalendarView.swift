@@ -129,11 +129,17 @@ public protocol CalendarViewItemLayoutDelegate: class {
    - Parameter calendarView: Object that holds all logic related to calendar
    - Parameter cell: `UICollectioViewCell` instance that was provided in [CalendarDateItemPresentable](x-source-tag://4002) and conform [CalendarItemConfigurable](x-source-tag://4003)
    - Parameter buildItem: [CalendarItemPresentable](x-source-tag://4000) instance used for configuration this cell
+   - Parameter date: Date for which requested build item
+   - Parameter calendar: Underline calendar that currently active in view
+   - Parameter locale: Locale that used within calendar.
    - Version: 0.1
    */
   func calendarView(_ calendarView: CalendarView,
                     willDisplay cell: CalendarItemConfigurable,
-                    for buildItem: CalendarItemPresentable)
+                    for buildItem: CalendarItemPresentable,
+                    configuredFor calendar: Calendar,
+                    and locale: Locale,
+                    forDate date: Date?)
 }
 
 /**
@@ -1058,13 +1064,26 @@ extension CalendarView: UICollectionViewDelegate {
         assert(buildItems.count == displayDates.count + dayNamesCount, "invalid data generation logic")
       }
 
-      guard let target = collectionView.cellForItem(at: indexPath) as? CalendarItemSelectable,
-        let buildItem = buildItems[indexPath.item] as? CalendarDateItemPresentable else {
+      guard let target = collectionView.cellForItem(at: indexPath) as? CalendarItemSelectable else {
           assertionFailure("invalid cast for selection")
           return
       }
 
-      delegate.calendarView(self, willDisplay: target, for: buildItem)
+      let buildItem = buildItems[indexPath.item - offsetForBuildItemFetch]
+
+      var date: Date?
+      if let _ = CalendarWeekDayViewPosition(rawValue: indexPath.item) {
+        date = nil
+      } else {
+        let currentItemIdxForDisplayDate = indexPath.item - startIndex
+
+        if indexPath.item >= startIndex,
+          displayDates.count > currentItemIdxForDisplayDate {
+          date = displayDates[currentItemIdxForDisplayDate]
+        }
+      }
+
+      delegate.calendarView(self, willDisplay: target, for: buildItem, configuredFor: engineCalendar, and: engineLocale, forDate: date)
     }
   }
 }
