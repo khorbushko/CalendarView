@@ -19,7 +19,7 @@ public struct CalendarMonth {
   let calendar: Calendar
   let locale: Locale
 
-  init?(date: Date, calendar: Calendar.Identifier, locale: Locale) {
+  public init?(date: Date, calendar: Calendar.Identifier, locale: Locale) {
     var targetCalendar = Calendar(identifier: calendar)
     targetCalendar.locale = locale
     self.calendar = targetCalendar
@@ -40,7 +40,7 @@ public struct CalendarMonth {
     }
   }
 
-  init?(index: Int, calendar: Calendar.Identifier, locale: Locale) {
+  public init?(index: Int, calendar: Calendar.Identifier, locale: Locale) {
     if index > 0 && index <= 12 {
       var targetCalendar = Calendar(identifier: calendar)
       targetCalendar.locale = locale
@@ -66,7 +66,7 @@ public struct CalendarMonth {
     }
   }
 
-  init?(name: String, calendar: Calendar.Identifier, locale: Locale) {
+  public init?(name: String, calendar: Calendar.Identifier, locale: Locale) {
     var targetCalendar = Calendar(identifier: calendar)
     targetCalendar.locale = locale
 

@@ -16,7 +16,7 @@ public struct CalendarYear {
 
   let value: Int
 
-  init?(date: Date, calendar: Calendar.Identifier, locale: Locale) {
+  public init?(date: Date, calendar: Calendar.Identifier, locale: Locale) {
     var targetCalendar = Calendar(identifier: calendar)
     targetCalendar.locale = locale
 
@@ -33,7 +33,7 @@ public struct CalendarYear {
     }
   }
 
-  init?(value: Int) {
+  public init?(value: Int) {
     if value >= 0 {
       self.value = value
     } else {
