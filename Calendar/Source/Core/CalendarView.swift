@@ -104,18 +104,24 @@ public protocol CalendarViewItemProviderDelegate: class {
 
    Sample:
 
-           func calendarView(_ calendarView: CalendarView, didCompleteConfigure cell: CalendarItemConfigurable, for buildItem: CalendarItemPresentable) {
-              /*modify cell additionally as u wish here*/
-           }
+       func calendarView(_ calendarView: CalendarView, didCompleteConfigure cell: CalendarItemConfigurable, for buildItem: CalendarItemPresentable, configuredFor calendar: Calendar, and locale: Locale, forDate date: Date?) {
+          /*modify cell additionally as u wish here*/
+       }
 
    - Parameter calendarView: Object that holds all logic related to calendar
    - Parameter cell: `UICollectioViewCell` instance that was provided in [CalendarDateItemPresentable](x-source-tag://4002) and conform [CalendarItemConfigurable](x-source-tag://4003)
    - Parameter buildItem: [CalendarItemPresentable](x-source-tag://4000) instance used for configuration this cell
+   - Parameter date: Date for which requested build item
+   - Parameter calendar: Underline calendar that currently active in view
+   - Parameter locale: Locale that used within calendar.
    - Version: 0.1
    */
   func calendarView(_ calendarView: CalendarView,
                     didCompleteConfigure cell: CalendarItemConfigurable,
-                    for buildItem: CalendarItemPresentable)
+                    for buildItem: CalendarItemPresentable,
+                    configuredFor calendar: Calendar,
+                    and locale: Locale,
+                    forDate date: Date?)
 }
 
 /**
@@ -882,6 +888,11 @@ extension CalendarView: UICollectionViewDataSource {
       let configurableCell = cellToReturn as? CalendarItemConfigurable
       configurableCell?.setupWith(buildItem)
 
+
+      if let confCell = cellToReturn as? CalendarItemConfigurable {
+        itemProviderDelegate?.calendarView(self, didCompleteConfigure: confCell, for: buildItem, configuredFor: engineCalendar, and: engineLocale, forDate: nil)
+      }
+
     } else {
       let currentItemIdx = indexPath.item - startIndex
 
@@ -917,7 +928,7 @@ extension CalendarView: UICollectionViewDataSource {
         }
 
         if let confCell = configurableCell {
-          itemProviderDelegate?.calendarView(self, didCompleteConfigure: confCell, for: buildItem)
+          itemProviderDelegate?.calendarView(self, didCompleteConfigure: confCell, for: buildItem, configuredFor: engineCalendar, and: engineLocale, forDate: dateToShow)
         }
       } else {
         if !showEnclosingMonths {
@@ -1060,11 +1071,8 @@ extension CalendarView: UICollectionViewDelegate {
 
   public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
     if let delegate = layoutDelegate {
-      if showEnclosingMonths {
-        assert(buildItems.count == displayDates.count + dayNamesCount, "invalid data generation logic")
-      }
 
-      guard let target = collectionView.cellForItem(at: indexPath) as? CalendarItemSelectable else {
+      guard let target = cell as? CalendarItemConfigurable else {
           assertionFailure("invalid cast for selection")
           return
       }

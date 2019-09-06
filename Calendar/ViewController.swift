@@ -126,7 +126,7 @@ extension ViewController: CalendarViewItemProviderDelegate {
     return item
   }
 
-  func calendarView(_ calendarView: CalendarView, didCompleteConfigure cell: CalendarItemConfigurable, for buildItem: CalendarItemPresentable) {
+  func calendarView(_ calendarView: CalendarView, didCompleteConfigure cell: CalendarItemConfigurable, for buildItem: CalendarItemPresentable, configuredFor calendar: Calendar, and locale: Locale, forDate date: Date?) {
     /*modify cell additionally as u wish here*/
   }
 }
