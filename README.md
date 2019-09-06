@@ -122,7 +122,7 @@ extension ViewController: CalendarViewItemProviderDelegate {
 
 For details of configuration - please see example and documentation for each class
 
-####Result:
+#### Result:
 
 <p align="center">
   <img alt="demo" src="./blobs/1.png" width="300">
@@ -155,18 +155,16 @@ Also u can use different options for changing behaviour of app.
 
 ```
 
-####Samples:
+#### Samples:
 
-<p align="center">
-	<div class="row">
- 	<div class="column">
-  	 <img alt="demo" src="./blobs/s_1.png" width="300">
- 	</div>
+<div class="row">
   <div class="column">
-  <img alt="demo" src="./blobs/s_2.png" width="300">
+    <img alt="demo" src="./blobs/s_1.png" width="300">
+  </div>
+  <div class="column">
+    <img alt="demo" src="./blobs/s_2.png" width="300">
   </div>
 </div>
-</p>
 
 ## TODO
 
