@@ -85,6 +85,8 @@ final class CalendarViewCollectionViewCell: UICollectionViewCell, CalendarItemSe
     setNeedsLayout()
     layoutIfNeeded()
 
+    updatePathForLayer()
+
     backgroundTodayLayer.opacity = 1
     backgroundTodayLayer.fillColor = UIColor.blue.cgColor
   }
@@ -105,17 +107,20 @@ final class CalendarViewCollectionViewCell: UICollectionViewCell, CalendarItemSe
   private func configureLayers() {
     backgroundTodayLayer.fillColor = UIColor.clear.cgColor
     backgroundTodayLayer.opacity = 0
-    backgroundTodayLayer.frame = contentContainerView.bounds
+    backgroundTodayLayer.frame = bounds
     contentContainerView.layer.insertSublayer(backgroundTodayLayer, below: centerView.layer)
 
     backgroundSelectionLayer.fillColor = UIColor.clear.cgColor
     backgroundSelectionLayer.opacity = 0
-    backgroundSelectionLayer.frame = contentContainerView.bounds
+    backgroundSelectionLayer.frame = bounds
     contentContainerView.layer.insertSublayer(backgroundSelectionLayer, above: backgroundTodayLayer)
   }
 
   private func updatePathForLayer() {
-    let rect = contentContainerView.bounds.insetBy(dx: 3, dy: 3)
+    backgroundSelectionLayer.frame = bounds
+    backgroundTodayLayer.frame = bounds
+
+    let rect = bounds.insetBy(dx: 3, dy: 3)
     let path = UIBezierPath(roundedRect: rect, cornerRadius: rect.height / 2)
     backgroundSelectionLayer.path = path.cgPath
     backgroundTodayLayer.path = path.cgPath
