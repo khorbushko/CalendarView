@@ -9,6 +9,8 @@
 import UIKit
 
 /**
+ Represent Year with en locale
+
  - Tag: 3000
  - Version: 0.1
  */
@@ -23,7 +25,7 @@ public struct CalendarYear {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy"
     dateFormatter.calendar = targetCalendar
-    dateFormatter.locale = locale
+    dateFormatter.locale = Locale(identifier: "en")
     let year = dateFormatter.string(from: date)
 
     if let idx = Int(year) {

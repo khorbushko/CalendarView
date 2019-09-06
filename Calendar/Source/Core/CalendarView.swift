@@ -460,7 +460,7 @@ final public class CalendarView: UIView, Nibable {
 
   /// Represent array of all selected dates, can be obtained at any time
   /// - Version: 0.1
-  var currentlySelectedDates: [Date] {
+  public var currentlySelectedDates: [Date] {
     return selectedDates
   }
 
@@ -524,6 +524,13 @@ final public class CalendarView: UIView, Nibable {
   /// - Version: 0.1
   public func updateAppearence(byApplying optionSet: CalendarAppearenceOption) {
     appearenceOptions = optionSet
+  }
+
+  /// Allow to modify selected dates
+  /// - Parameter preSelectedDates: Set of preselected dates
+  /// - Version: 0.1
+  public func addPreSelectedDates(_ preSelectedDates: [Date]) {
+    selectedDates.append(contentsOf: preSelectedDates)
   }
 
   /// Change animation that used while changing date with any of available methods
@@ -1034,6 +1041,12 @@ extension CalendarView: UICollectionViewDelegate {
                 let prevSelected = collectionView.cellForItem(at: prevIndexPathSelected) as? CalendarItemSelectable
                 prevSelected?.selectItem(false, item: buildItem)
 
+                if showEnclosingMonths,
+                  hightlightCurrentMonth {
+                  let isDateFromNotSelectedMonth = !displayDatesForCurrentMonth.contains(where: { engineCalendar.isDate($0, inSameDayAs: interestedDate) })
+                  target.markCellAsInactive(isDateFromNotSelectedMonth, item: buildItem)
+                }
+
                 dateSelectionDelegate?.calendarView(self, configuredFor: engineCalendar, and: engineLocale, didDetectDateSelectionChangeFor: interestedDate, selectionType: .deselect)
                 return
               } else {
@@ -1061,6 +1074,12 @@ extension CalendarView: UICollectionViewDelegate {
                     let prevIndexPathSelected = IndexPath(item: prevIndex, section: 0)
                     let prevSelected = collectionView.cellForItem(at: prevIndexPathSelected) as? CalendarItemSelectable
                     prevSelected?.selectItem(false, item: buildItem)
+
+                    if showEnclosingMonths,
+                      hightlightCurrentMonth {
+                      let isDateFromNotSelectedMonth = !displayDatesForCurrentMonth.contains(where: { engineCalendar.isDate($0, inSameDayAs: interestedDate) })
+                      target.markCellAsInactive(isDateFromNotSelectedMonth, item: buildItem)
+                    }
                   }
 
                   dateSelectionDelegate?.calendarView(self, configuredFor: engineCalendar, and: engineLocale, didDetectDateSelectionChangeFor: date, selectionType: .deselect)

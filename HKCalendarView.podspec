@@ -5,7 +5,7 @@ s.ios.deployment_target = '11.0'
 s.name = "HKCalendarView"
 s.summary = "Calendar control that represent single month view calendar"
 s.requires_arc = true
-s.version = "0.0.14"
+s.version = "0.0.15"
 s.license = 'MIT'
 s.author = { "Kyryl" => "kirill.ge@gmail.com" }
 s.homepage = "https://github.com/kirillgorbushko/CalendarView"

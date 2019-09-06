@@ -9,6 +9,8 @@
 import UIKit
 
 /**
+ Represent Month with en locale
+
  - Tag: 3001
  - Version: 0.1
  */
@@ -32,6 +34,7 @@ public struct CalendarMonth {
     self.name = dateFormatter.string(from: date)
 
     dateFormatter.dateFormat = "MM"
+    dateFormatter.locale = Locale(identifier: "en")
     let indexString = dateFormatter.string(from: date)
     if let idx = Int(indexString) {
       self.index = idx
@@ -52,7 +55,7 @@ public struct CalendarMonth {
       let dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "MM"
       dateFormatter.calendar = targetCalendar
-      dateFormatter.locale = locale
+      dateFormatter.locale = Locale(identifier: "en")
 
       if let date = dateFormatter.date(from: "\(index)") {
         dateFormatter.dateFormat = "LLLL"
@@ -81,6 +84,7 @@ public struct CalendarMonth {
 
     if let date = dateFormatter.date(from: name) {
       dateFormatter.dateFormat = "MM"
+      dateFormatter.locale = Locale(identifier: "en")
       let indexString = dateFormatter.string(from: date)
       if let idx = Int(indexString) {
         self.index = idx
