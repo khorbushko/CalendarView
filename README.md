@@ -162,7 +162,7 @@ Also u can use different options for changing behaviour of app.
     <p align="center">
       <img alt="demo" src="./blobs/s_1.png" width="300">
       <img alt="demo" src="./blobs/s_2.png" width="300">
-      <img alt="demo" src="./blobs/s_3.png" width="300">
+      <img alt="demo" src="./blobs/s_4.png" width="300">
     </p>
   </div>
 </div>
