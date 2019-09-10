@@ -383,7 +383,7 @@ final public class CalendarView: UIView, Nibable {
 
   /// display date for which shown calendar month
   /// - Version: 0.1
-  private (set) var activeDate: Date = Date() {
+  public private (set) var activeDate: Date = Date() {
     didSet {
       callbacksForDate(activeDate)
     }
