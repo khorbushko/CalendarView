@@ -159,10 +159,11 @@ Also u can use different options for changing behaviour of app.
 
 <div class="row">
   <div class="column">
-    <img alt="demo" src="./blobs/s_1.png" width="300">
-  </div>
-  <div class="column">
-    <img alt="demo" src="./blobs/s_2.png" width="300">
+    <p align="center">
+      <img alt="demo" src="./blobs/s_1.png" width="300">
+      <img alt="demo" src="./blobs/s_2.png" width="300">
+      <img alt="demo" src="./blobs/s_3.png" width="300">
+    </p>
   </div>
 </div>
 
