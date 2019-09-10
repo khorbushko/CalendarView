@@ -940,20 +940,21 @@ extension CalendarView: UICollectionViewDataSource {
         let configurableCell = cellToReturn as? CalendarItemSelectable
         configurableCell?.setupWith(buildItem)
 
+        let isSelected = selectedDates.contains(where: { engineCalendar.isDate($0, inSameDayAs: dateToShow) })
+        configurableCell?.selectItem(isSelected, item: buildItem)
+
         let isTodayItem = engineCalendar.isDateInToday(dateToShow)
         if isTodayItem {
           configurableCell?.markIsTodayCell(buildItem)
         }
 
         if !isTodayItem,
-          showEnclosingMonths,
-            hightlightCurrentMonth {
+            !isSelected,
+              showEnclosingMonths,
+                hightlightCurrentMonth {
           let isDateFromNotSelectedMonth = !displayDatesForCurrentMonth.contains(where: { engineCalendar.isDate($0, inSameDayAs: dateToShow) })
           configurableCell?.markCellAsInactive(isDateFromNotSelectedMonth, item: buildItem)
         }
-
-        let isSelected = selectedDates.contains(where: { engineCalendar.isDate($0, inSameDayAs: dateToShow) })
-        configurableCell?.selectItem(isSelected, item: buildItem)
 
         if let confCell = configurableCell {
           itemProviderDelegate?.calendarView(self, didCompleteConfigure: confCell, for: buildItem, configuredFor: engineCalendar, and: engineLocale, forDate: dateToShow)
