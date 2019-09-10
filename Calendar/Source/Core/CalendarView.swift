@@ -381,7 +381,9 @@ final public class CalendarView: UIView, Nibable {
 
   // MARK: - ThisMonth
 
-  private var activeDate: Date = Date() {
+  /// display date for which shown calendar month
+  /// - Version: 0.1
+  private (set) var activeDate: Date = Date() {
     didSet {
       callbacksForDate(activeDate)
     }
@@ -938,9 +940,6 @@ extension CalendarView: UICollectionViewDataSource {
         let configurableCell = cellToReturn as? CalendarItemSelectable
         configurableCell?.setupWith(buildItem)
 
-        let isSelected = selectedDates.contains(where: { engineCalendar.isDate($0, inSameDayAs: dateToShow) })
-        configurableCell?.selectItem(isSelected, item: buildItem)
-
         let isTodayItem = engineCalendar.isDateInToday(dateToShow)
         if isTodayItem {
           configurableCell?.markIsTodayCell(buildItem)
@@ -952,6 +951,9 @@ extension CalendarView: UICollectionViewDataSource {
           let isDateFromNotSelectedMonth = !displayDatesForCurrentMonth.contains(where: { engineCalendar.isDate($0, inSameDayAs: dateToShow) })
           configurableCell?.markCellAsInactive(isDateFromNotSelectedMonth, item: buildItem)
         }
+
+        let isSelected = selectedDates.contains(where: { engineCalendar.isDate($0, inSameDayAs: dateToShow) })
+        configurableCell?.selectItem(isSelected, item: buildItem)
 
         if let confCell = configurableCell {
           itemProviderDelegate?.calendarView(self, didCompleteConfigure: confCell, for: buildItem, configuredFor: engineCalendar, and: engineLocale, forDate: dateToShow)
