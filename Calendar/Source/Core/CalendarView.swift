@@ -1042,7 +1042,9 @@ extension CalendarView: UICollectionViewDelegate {
                 let prevIndex = indexInStorage + startIndex
                 let prevIndexPathSelected = IndexPath(item: prevIndex, section: 0)
                 let prevSelected = collectionView.cellForItem(at: prevIndexPathSelected) as? CalendarItemSelectable
-                prevSelected?.selectItem(false, item: buildItem)
+                if let prevBuildItem = buildItems[prevIndexPathSelected.item - offsetForBuildItemFetch] as? CalendarDateItemPresentable {
+                  prevSelected?.selectItem(false, item: prevBuildItem)
+                }
 
                 if showEnclosingMonths,
                   hightlightCurrentMonth {
@@ -1076,7 +1078,9 @@ extension CalendarView: UICollectionViewDelegate {
                     let prevIndex = indexInStorage + startIndex
                     let prevIndexPathSelected = IndexPath(item: prevIndex, section: 0)
                     let prevSelected = collectionView.cellForItem(at: prevIndexPathSelected) as? CalendarItemSelectable
-                    prevSelected?.selectItem(false, item: buildItem)
+                    if let prevBuildItem = buildItems[prevIndexPathSelected.item - offsetForBuildItemFetch] as? CalendarDateItemPresentable {
+                      prevSelected?.selectItem(false, item: prevBuildItem)
+                    }
 
                     if showEnclosingMonths,
                       hightlightCurrentMonth {
