@@ -39,6 +39,9 @@ public struct CalendarAppearenceOption: OptionSet {
   /// If selected `CalendarSelectionType.single`, this option may enable deselect already selected item
   public static let allowSingleDeselectionForSingleMode = CalendarAppearenceOption(rawValue: 1 << 4)
 
+  /// If enabled **showEnclosingMonth** option, day's that are in current month always will display 7 rows
+  public static let showConstantCount = CalendarAppearenceOption(rawValue: 1 << 5)
+
   /// Represent set of minimal (non) option for calendar
   public static let noOption: CalendarAppearenceOption = []
 

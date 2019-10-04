@@ -422,6 +422,10 @@ final public class CalendarView: UIView, Nibable {
     return appearenceOptions.contains(.allowSingleDeselectionForSingleMode)
   }
 
+  private var showConstantCount: Bool {
+    return appearenceOptions.contains(.showConstantCount)
+  }
+
   private var prevMonthRange: Range<Int>? {
     if showEnclosingMonths,
       let prevMonthDate = engineCalendar.prevMonth(from: activeDate) {
@@ -831,7 +835,15 @@ final public class CalendarView: UIView, Nibable {
       if let lastOfTheMonth = displayDatesForCurrentMonth.last {
         let weekday = engineCalendar.component(.weekday, from: lastOfTheMonth)
 
-        let daysToFetch = 7 - weekday
+        var daysToFetch = Defines.Calendar.deysInWeek - weekday
+
+        if showConstantCount {
+          let numberOfRows = 7
+          if (displayDates.count + dayNamesCount + daysToFetch) < Defines.Calendar.deysInWeek * numberOfRows {
+            daysToFetch += Defines.Calendar.deysInWeek
+          }
+        }
+
         if daysToFetch > 0 {
 
           for idx in stride(from: rangeOfDaysNextMonth.lowerBound, to: rangeOfDaysNextMonth.lowerBound + daysToFetch, by: 1) {
