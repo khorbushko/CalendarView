@@ -48,3 +48,34 @@ public struct CalendarAppearenceOption: OptionSet {
   /// Default set of options for calendar - `showEnclosingMonth` and `hightlightCurrentMonth`
   public static let `default`: CalendarAppearenceOption = [.showEnclosingMonth, .hightlightCurrentMonth]
 }
+
+internal extension CalendarAppearenceOption {
+
+  // MARK: - Debug
+
+  var enableDebugMessages: Bool {
+    contains(.debugMode)
+  }
+
+  // MARK: - Enclosing month
+
+  var showEnclosingMonths: Bool {
+    contains(.showEnclosingMonth)
+  }
+
+  var hightlightCurrentMonth: Bool {
+    contains(.hightlightCurrentMonth)
+  }
+
+  var enableEnclosingMonthSelection: Bool {
+    contains(.enableEnclosingMonthSelection)
+  }
+
+  var enablseSingleDeselectionForSingleMode: Bool {
+    contains(.allowSingleDeselectionForSingleMode)
+  }
+
+  var showConstantCount: Bool {
+    contains(.showConstantCount)
+  }
+}

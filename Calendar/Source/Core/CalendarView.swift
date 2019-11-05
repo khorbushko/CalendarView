@@ -295,12 +295,7 @@ final public class CalendarView: UIView, Nibable {
     }
   }
 
-  fileprivate enum Defines {
-
-    enum Calendar {
-
-      static let deysInWeek = 7
-    }
+  fileprivate enum CalendarViewDefines {
 
     enum Layout {
 
@@ -312,32 +307,26 @@ final public class CalendarView: UIView, Nibable {
   @IBOutlet private weak var containerView: UIView!
   @IBOutlet private weak var collectionView: UICollectionView!
 
-  private var engineCalendar: Calendar!
-  private var engineLocale: Locale!
-
-  private var displayDates: [Date] {
-    return displayDatesForPrevMonth + displayDatesForCurrentMonth + displayDatesForNextMonth
-  }
-
-  private var displayDatesForPrevMonth: [Date] = []
-  private var displayDatesForCurrentMonth: [Date] = []
-  private var displayDatesForNextMonth: [Date] = []
-
+  private var timeline: Timeline!
   private var buildItems: [CalendarItemPresentable] = []
 
-  private var startIndex: Int = 0
-  private var offsetForBuildItemFetch: Int = 0
-
-  private var dayNamesCount: Int {
-    let count = weekDayNameStyle == .none ? 0 : Defines.Calendar.deysInWeek
-    return count
+  private var offsetForBuildItemFetch: Int {
+    timeline.startIndex - timeline.dayNamesCount
   }
 
   // MARK: - Appearence
 
-  private var appearenceOptions: CalendarAppearenceOption = .default
+  private var weekDayNameStyle: CalendarWeekSymbolType {
+    get {
+      timeline.weekDayNameStyle
+    }
 
-  private var weekDayNameStyle: CalendarWeekSymbolType = .veryShort
+    set {
+      timeline.weekDayNameStyle = newValue
+    }
+  }
+
+  private var appearenceOptions: CalendarAppearenceOption = .default
   private var calendarAnimationStyle: CalendarViewAnimationType = .scaleItem
 
   // MARK: - Selection
@@ -345,7 +334,9 @@ final public class CalendarView: UIView, Nibable {
   private var selectionStyle: CalendarSelectionType = .single
   private var selectedDates: [Date] = [] {
     didSet {
-      eventDelegate?.calendarView(self, configuredFor: engineCalendar, and: engineLocale, didChangeSelectedDates: selectedDates)
+      let calendar = timeline.underlineCalendar
+      let locale = timeline.underlineLocale
+      eventDelegate?.calendarView(self, configuredFor: calendar, and: locale, didChangeSelectedDates: selectedDates)
     }
   }
 
@@ -383,83 +374,15 @@ final public class CalendarView: UIView, Nibable {
 
   /// display date for which shown calendar month
   /// - Version: 0.1
-  public private (set) var activeDate: Date = Date() {
-    didSet {
-      callbacksForDate(activeDate)
-    }
-  }
-
-  private var currentMonthRange: Range<Int>? {
-    return engineCalendar.range(of: .day, in: .month, for: activeDate)
-  }
-
-  private var currentMonthDateComponents: DateComponents {
-    let componentsToReturn = componentsFromDate(activeDate)
-    return componentsToReturn
-  }
-
-  // MARK: - Debug
-
-  private var enableDebugMessages: Bool {
-    return appearenceOptions.contains(.debugMode)
-  }
-
-  // MARK: - Enclosing month
-
-  private var showEnclosingMonths: Bool {
-    return appearenceOptions.contains(.showEnclosingMonth)
-  }
-
-  private var hightlightCurrentMonth: Bool {
-    return appearenceOptions.contains(.hightlightCurrentMonth)
-  }
-
-  private var enableEnclosingMonthSelection: Bool {
-    return appearenceOptions.contains(.enableEnclosingMonthSelection)
-  }
-
-  private var enablseSingleDeselectionForSingleMode: Bool {
-    return appearenceOptions.contains(.allowSingleDeselectionForSingleMode)
-  }
-
-  private var showConstantCount: Bool {
-    return appearenceOptions.contains(.showConstantCount)
-  }
-
-  private var prevMonthRange: Range<Int>? {
-    if showEnclosingMonths,
-      let prevMonthDate = engineCalendar.prevMonth(from: activeDate) {
-      return engineCalendar.range(of: .day, in: .month, for: prevMonthDate)
+  public private (set) var activeDate: Date {
+    set {
+      timeline.prepareMonthTimelineFor(newValue, options: appearenceOptions)
+      callbacksForDate(newValue)
     }
 
-    return nil
-  }
-
-  private var nextMonthRange: Range<Int>? {
-    if showEnclosingMonths,
-      let nextMonthDate = engineCalendar.nextMonth(from: activeDate) {
-      return engineCalendar.range(of: .day, in: .month, for: nextMonthDate)
+    get {
+      timeline.activeDate
     }
-
-    return nil
-  }
-
-  private var prevMonthDateComponents: DateComponents? {
-    if let prevMonthDate = engineCalendar.prevMonth(from: activeDate) {
-      let componentsToReturn = componentsFromDate(prevMonthDate)
-      return componentsToReturn
-    }
-
-    return nil
-  }
-
-  private var nextMonthDateComponents: DateComponents? {
-    if let nextMonthDate = engineCalendar.nextMonth(from: activeDate) {
-      let componentsToReturn = componentsFromDate(nextMonthDate)
-      return componentsToReturn
-    }
-
-    return nil
   }
 
   // MARK: - Public Props
@@ -509,7 +432,7 @@ final public class CalendarView: UIView, Nibable {
   public func forceReload() {
     CATransaction.begin()
     CATransaction.setDisableActions(true)
-      configureStartIndexForCurrentActiveDate()
+      showTimelineForSelectedDate()
     CATransaction.commit()
   }
 
@@ -519,7 +442,7 @@ final public class CalendarView: UIView, Nibable {
     CATransaction.begin()
     CATransaction.setDisableActions(true)
       selectedDates.removeAll()
-      configureStartIndexForCurrentActiveDate()
+      showTimelineForSelectedDate()
     CATransaction.commit()
   }
 
@@ -553,7 +476,7 @@ final public class CalendarView: UIView, Nibable {
     CATransaction.begin()
     CATransaction.setDisableActions(true)
       weekDayNameStyle = style
-      configureStartIndexForCurrentActiveDate()
+      showTimelineForSelectedDate()
     CATransaction.commit()
   }
 
@@ -565,9 +488,11 @@ final public class CalendarView: UIView, Nibable {
   /// - Parameter newYear: Object that represent Year, check [CalendarYear](x-source-tag://3000)
   /// - Version: 0.1
   public func changeCurrentDate(year newYear: CalendarYear) {
-    var component = engineCalendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: activeDate)
+    let calendar = timeline.underlineCalendar
+
+    var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: activeDate)
     component.year = newYear.value
-    if let updatedDate = engineCalendar.date(from: component) {
+    if let updatedDate = calendar.date(from: component) {
       switchToDate(updatedDate)
     }
   }
@@ -578,9 +503,11 @@ final public class CalendarView: UIView, Nibable {
   /// - Parameter newMonth: Object that represent Month, check [CalendarMonth](x-source-tag://3001)
   /// - Version: 0.1
   public func changeCurrentDate(month newMonth: CalendarMonth) {
-    var component = engineCalendar.dateComponents([.year, .month, .day, .hour, .minute, .second, .calendar], from: activeDate)
+    let calendar = timeline.underlineCalendar
+
+    var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second, .calendar], from: activeDate)
     component.month = newMonth.index
-    if let updatedDate = engineCalendar.date(from: component) {
+    if let updatedDate = calendar.date(from: component) {
       switchToDate(updatedDate)
     }
   }
@@ -592,10 +519,12 @@ final public class CalendarView: UIView, Nibable {
   /// - Parameter newYear: Object that represent Year, check [CalendarYear](x-source-tag://3000)
   /// - Version: 0.1
   public func changeCurrentDate(month newMonth: CalendarMonth, year newYear: CalendarYear) {
-    var component = engineCalendar.dateComponents([.year, .month, .day, .hour, .minute, .second, .calendar], from: activeDate)
+    let calendar = timeline.underlineCalendar
+
+    var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second, .calendar], from: activeDate)
     component.month = newMonth.index
     component.year = newYear.value
-    if let updatedDate = engineCalendar.date(from: component) {
+    if let updatedDate = calendar.date(from: component) {
       switchToDate(updatedDate)
     }
   }
@@ -629,53 +558,55 @@ final public class CalendarView: UIView, Nibable {
   /// - Parameter locale: Information about linguistic, cultural, and technological conventions for use in formatting data for presentation.
   /// - Version: 0.1
   public func switchToCalendarType(_ identifier: Calendar.Identifier, locale: Locale) {
-    let current = engineCalendar.identifier
+    let current = timeline.underlineCalendar.identifier
     if current == identifier {
       return
     }
 
     setupCalendar(identifier, locale: locale)
-    configureStartIndexForCurrentActiveDate()
     switchToDate(activeDate)
   }
 
   // MARK: - Private Navigation
 
   private func callbacksForDate(_ date: Date) {
-    if let month = CalendarMonth(date: date, calendar: engineCalendar.identifier, locale: engineLocale),
-      let year = CalendarYear(date: date, calendar: engineCalendar.identifier, locale: engineLocale) {
-      eventDelegate?.calendarView(self, configuredFor: engineCalendar, and: engineLocale, didChangeYear: year)
-      eventDelegate?.calendarView(self, configuredFor: engineCalendar, and: engineLocale, didChangeMonth: month)
+    let locale = timeline.underlineLocale
+    let calendar = timeline.underlineCalendar
+
+    if let month = CalendarMonth(date: date, calendar: calendar.identifier, locale: locale),
+      let year = CalendarYear(date: date, calendar: calendar.identifier, locale: locale) {
+      eventDelegate?.calendarView(self, configuredFor: calendar, and: locale, didChangeYear: year)
+      eventDelegate?.calendarView(self, configuredFor: calendar, and: locale, didChangeMonth: month)
     }
   }
 
   private func switchToDate(_ date: Date) {
-    activeDate = date
-    configureStartIndexForCurrentActiveDate()
+    showTimeLineForDate(date)
   }
 
   private func switchToTodayView() {
     let today = Date()
-    if !displayDates.contains(where: { engineCalendar.isDate($0, inSameDayAs: today) }) {
-      activeDate = today
-      configureStartIndexForCurrentActiveDate()
+    let calendar = timeline.underlineCalendar
+
+    if !timeline.displayDates.contains(where: { calendar.isDate($0, inSameDayAs: today) }) {
+      showTimeLineForDate(today)
     }
   }
 
   private func switchToSelectedDateIfAny() {
     if let date = selectedDates.first {
-
-      if !displayDates.contains(where: { engineCalendar.isDate($0, inSameDayAs: date) }) {
-        activeDate = date
-        configureStartIndexForCurrentActiveDate()
+      let calendar = timeline.underlineCalendar
+      if !timeline.displayDates.contains(where: { calendar.isDate($0, inSameDayAs: date) }) {
+        showTimeLineForDate(date)
       }
     }
   }
 
   private func switchToNextMonth() {
-    if let next = engineCalendar.nextMonth(from: activeDate) {
-      activeDate = next
-      configureStartIndexForCurrentActiveDate()
+    let calendar = timeline.underlineCalendar
+
+    if let next = calendar.nextMonth(from: activeDate) {
+      showTimeLineForDate(next)
 
       switch calendarAnimationStyle {
         case .none:
@@ -690,9 +621,10 @@ final public class CalendarView: UIView, Nibable {
   }
 
   private func switchToPrevMonth() {
-    if let prev = engineCalendar.prevMonth(from: activeDate) {
-      activeDate = prev
-      configureStartIndexForCurrentActiveDate()
+    let calendar = timeline.underlineCalendar
+
+    if let prev = calendar.prevMonth(from: activeDate) {
+      showTimeLineForDate(prev)
 
       switch calendarAnimationStyle {
         case .none:
@@ -709,29 +641,8 @@ final public class CalendarView: UIView, Nibable {
   // MARK: - Private
 
   private func animateVisibleCells(_ toLeft: Bool) {
-    collectionView.layoutIfNeeded()
-    var visibleItems = collectionView.indexPathsForVisibleItems.sorted()
-    if !toLeft {
-      visibleItems.reverse()
-    }
-
     let skippedIdxValue = weekDayNameStyle == .none ? 0 : Defines.Calendar.deysInWeek
-
-    for (idx, item) in visibleItems.enumerated() {
-      let cell = collectionView.cellForItem(at: item)
-
-      if item.item >= skippedIdxValue {
-        cell?.transform = .init(scaleX: 0.1, y: 0.1)
-        cell?.alpha = 0
-        UIView.animate(withDuration: Double(idx) * 0.01) {
-          cell?.transform = .identity
-          cell?.alpha = 1
-        }
-      } else {
-        cell?.transform = .identity
-        cell?.alpha = 1
-      }
-    }
+    collectionView.animateVisibleCells(toLeft, skippedCount: skippedIdxValue)
   }
 
   private func configureCalendarView() {
@@ -739,7 +650,6 @@ final public class CalendarView: UIView, Nibable {
     registerCells()
 
     setupCalendar(.gregorian, locale: Locale(identifier: "en"))
-    configureStartIndexForCurrentActiveDate()
   }
 
   private func prepareCollectionView() {
@@ -764,104 +674,22 @@ final public class CalendarView: UIView, Nibable {
   }
 
   private func setupCalendar(_ identifier: Calendar.Identifier, locale: Locale) {
-    engineLocale = locale
-    engineCalendar = Calendar(identifier: identifier)
-    engineCalendar.timeZone = TimeZone.autoupdatingCurrent
-    engineCalendar.locale = engineLocale
+    timeline = Timeline(identifier, locale: locale)
+    showTimelineForSelectedDate()
   }
 
   // MARK: - Config
 
-  private func componentsFromDate(_ date: Date) -> DateComponents {
-    var componentsToReturn = engineCalendar.dateComponents([.day, .month, .year, .era, .weekday], from: date)
-    componentsToReturn.timeZone = engineCalendar.timeZone
-    componentsToReturn.hour = 0
-    componentsToReturn.minute = 0
-    componentsToReturn.second = 0
-    return componentsToReturn
+  private func showTimeLineForDate(_ date: Date) {
+    buildItems.removeAll()
+    timeline.prepareMonthTimelineFor(date, options: appearenceOptions)
+
+    collectionView.reloadData()
   }
 
-  private func configureStartIndexForCurrentActiveDate() {
-    displayDatesForPrevMonth.removeAll()
-    displayDatesForCurrentMonth.removeAll()
-    displayDatesForNextMonth.removeAll()
+  private func showTimelineForSelectedDate() {
     buildItems.removeAll()
-
-    guard let rangeOfDaysThisMonth = currentMonthRange else {
-      return
-    }
-
-    var currentComponents = currentMonthDateComponents
-    for idx in stride(from: rangeOfDaysThisMonth.lowerBound, to: rangeOfDaysThisMonth.upperBound, by: 1) {
-      currentComponents.day = idx
-      if let dateToShow = engineCalendar.date(from: currentComponents) {
-        displayDatesForCurrentMonth.append(dateToShow)
-      } else {
-        assertionFailure("can't generate date for selcted range")
-      }
-    }
-
-    if !displayDates.isEmpty,
-      let firstOfTheMonth = displayDates.first {
-      let weekday = engineCalendar.component(.weekday, from: firstOfTheMonth)
-
-      if weekday == 7 {
-        startIndex = dayNamesCount + (dayNamesCount - 1)
-      } else {
-        startIndex = ((weekday % 7) - 1) + dayNamesCount
-      }
-    }
-
-    if showEnclosingMonths {
-      guard let rangeOfDaysPrevMonth = prevMonthRange,
-        let rangeOfDaysNextMonth = nextMonthRange else {
-          return
-      }
-
-      let offsetForDate = startIndex - dayNamesCount
-
-      var prevComponents = prevMonthDateComponents
-      for idx in stride(from: rangeOfDaysPrevMonth.upperBound - offsetForDate, to: rangeOfDaysPrevMonth.upperBound, by: 1) {
-        prevComponents?.day = idx
-        if let comp = prevComponents,
-          let dateToShow = engineCalendar.date(from: comp) {
-          displayDatesForPrevMonth.append(dateToShow)
-        } else {
-          assertionFailure("can't generate date for selected prev month range")
-        }
-      }
-
-      var nextComponents = nextMonthDateComponents
-      if let lastOfTheMonth = displayDatesForCurrentMonth.last {
-        let weekday = engineCalendar.component(.weekday, from: lastOfTheMonth)
-
-        var daysToFetch = Defines.Calendar.deysInWeek - weekday
-
-        if showConstantCount {
-          let numberOfRows = 7
-          if (displayDates.count + dayNamesCount + daysToFetch) < Defines.Calendar.deysInWeek * numberOfRows {
-            daysToFetch += Defines.Calendar.deysInWeek
-          }
-        }
-
-        if daysToFetch > 0 {
-
-          for idx in stride(from: rangeOfDaysNextMonth.lowerBound, to: rangeOfDaysNextMonth.lowerBound + daysToFetch, by: 1) {
-            nextComponents?.day = idx
-            if let comp = nextComponents,
-              let dateToShow = engineCalendar.date(from: comp) {
-              displayDatesForNextMonth.append(dateToShow)
-            } else {
-              assertionFailure("can't generate date for selected next month range")
-            }
-          }
-        }
-      }
-
-      startIndex = dayNamesCount
-    }
-
-    offsetForBuildItemFetch = startIndex - dayNamesCount
+    timeline.prepareMonthTimelineForCurrentlySelectedDate()
 
     collectionView.reloadData()
   }
@@ -872,24 +700,18 @@ extension CalendarView: UICollectionViewDataSource {
   // MARK: - UICollectionViewDataSource
 
   public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    if showEnclosingMonths {
-      return displayDates.count + dayNamesCount
-    } else {
-      return startIndex + displayDates.count
-    }
+    timeline.numberOfItemsInSection()
   }
 
   public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
     var cellToReturn: UICollectionViewCell?
-
-    let dateFormatter = DateFormatter()
-    dateFormatter.locale = engineLocale
-    dateFormatter.calendar = engineCalendar
+    let dateFormatter = timeline.adoptedDateFormatter()
+    let calendar = timeline.underlineCalendar
+    let locale = timeline.underlineLocale
 
     if weekDayNameStyle != .none,
       let dayName = CalendarWeekDayViewPosition(rawValue: indexPath.item) {
-
       var symbols: [String] = []
 
       switch weekDayNameStyle {
@@ -910,15 +732,15 @@ extension CalendarView: UICollectionViewDataSource {
 
       let name = symbols[dayName.rawValue]
       var buildItem: CalendarWeekDayItemPresentable = CalendarDateItem(weekDayName: name,
-                                                                       calendar: engineCalendar,
-                                                                       locale: engineLocale)
+                                                                       calendar: calendar,
+                                                                       locale: locale)
       if let configDelegate = itemProviderDelegate {
         buildItem = configDelegate.calendarView(self,
                                                 didRequestWeekDayItemFor: weekDayNameStyle,
                                                 forWeekNameItem: dayName,
                                                 poposedName: name,
-                                                calendar: engineCalendar,
-                                                locale: engineLocale)
+                                                calendar: calendar,
+                                                locale: locale)
       }
       buildItems.append(buildItem)
 
@@ -928,22 +750,22 @@ extension CalendarView: UICollectionViewDataSource {
       let configurableCell = cellToReturn as? CalendarItemConfigurable
       configurableCell?.setupWith(buildItem)
 
-
       if let confCell = cellToReturn as? CalendarItemConfigurable {
-        itemProviderDelegate?.calendarView(self, didCompleteConfigure: confCell, for: buildItem, configuredFor: engineCalendar, and: engineLocale, forDate: nil)
+        itemProviderDelegate?.calendarView(self, didCompleteConfigure: confCell, for: buildItem, configuredFor: calendar, and: locale, forDate: nil)
       }
 
     } else {
-      let currentItemIdx = indexPath.item - startIndex
+      let currentItemIdx = indexPath.item - timeline.startIndex
 
       if currentItemIdx >= 0,
-        displayDates.count > currentItemIdx {
-        let dateToShow = displayDates[currentItemIdx]
+        timeline.displayDates.count > currentItemIdx {
+        let dateToShow = timeline.displayDates[currentItemIdx]
 
-        var buildItem: CalendarDateItemPresentable = CalendarDateItem(date: dateToShow, calendar: engineCalendar, locale: engineLocale)
+        var buildItem: CalendarDateItemPresentable = CalendarDateItem(date: dateToShow, calendar: calendar, locale: locale)
         if let configDelegate = itemProviderDelegate {
-          buildItem = configDelegate.calendarView(self, didRequestDateItemFor: dateToShow, calendar: engineCalendar, locale: engineLocale)
+          buildItem = configDelegate.calendarView(self, didRequestDateItemFor: dateToShow, calendar: calendar, locale: locale)
         }
+
         buildItems.append(buildItem)
 
         let cellResuseIdentifier = type(of: buildItem).calendarItemIdentifier
@@ -952,28 +774,29 @@ extension CalendarView: UICollectionViewDataSource {
         let configurableCell = cellToReturn as? CalendarItemSelectable
         configurableCell?.setupWith(buildItem)
 
-        let isSelected = selectedDates.contains(where: { engineCalendar.isDate($0, inSameDayAs: dateToShow) })
+        let isSelected = selectedDates.contains(where: { calendar.isDate($0, inSameDayAs: dateToShow) })
         configurableCell?.selectItem(isSelected, item: buildItem)
 
-        let isTodayItem = engineCalendar.isDateInToday(dateToShow)
+        let isTodayItem = timeline.isDateInToday(dateToShow)
+
         if isTodayItem {
           configurableCell?.markIsTodayCell(buildItem)
         }
 
         if !isTodayItem,
             !isSelected,
-              showEnclosingMonths,
-                hightlightCurrentMonth {
-          let isDateFromNotSelectedMonth = !displayDatesForCurrentMonth.contains(where: { engineCalendar.isDate($0, inSameDayAs: dateToShow) })
+              appearenceOptions.showEnclosingMonths,
+                appearenceOptions.hightlightCurrentMonth {
+          let isDateFromNotSelectedMonth = !timeline.displayDatesForCurrentMonth.contains(where: { calendar.isDate($0, inSameDayAs: dateToShow) })
           configurableCell?.markCellAsInactive(isDateFromNotSelectedMonth, item: buildItem)
         }
 
         if let confCell = configurableCell {
-          itemProviderDelegate?.calendarView(self, didCompleteConfigure: confCell, for: buildItem, configuredFor: engineCalendar, and: engineLocale, forDate: dateToShow)
+          itemProviderDelegate?.calendarView(self, didCompleteConfigure: confCell, for: buildItem, configuredFor: calendar, and: locale, forDate: dateToShow)
         }
       } else {
-        if !showEnclosingMonths {
-          let startBounds = startIndex
+        if !appearenceOptions.showEnclosingMonths {
+          let startBounds = timeline.startIndex
           if indexPath.item < startBounds {
             let identifier = String(describing: CalendarViewCollectionViewCell.self)
             cellToReturn = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
@@ -998,40 +821,32 @@ extension CalendarView: UICollectionViewDelegate {
 
   public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
+    let calendar = timeline.underlineCalendar
+    let locale = timeline.underlineLocale
+
     if let weekDay = CalendarWeekDayViewPosition(rawValue: indexPath.item) {
-      eventDelegate?.calendarView(self, configuredFor: engineCalendar, and: engineLocale, didDetectWeekDayNameSelection: weekDay)
+      eventDelegate?.calendarView(self, configuredFor: calendar, and: locale, didDetectWeekDayNameSelection: weekDay)
     } else {
-      let currentItemIdxForDisplayDate = indexPath.item - startIndex
+      let currentItemIdxForDisplayDate = indexPath.item - timeline.startIndex
+      if indexPath.item >= timeline.startIndex,
+        timeline.displayDates.count > currentItemIdxForDisplayDate {
+        let interestedDate = timeline.displayDates[currentItemIdxForDisplayDate]
 
-      if indexPath.item >= startIndex,
-        displayDates.count > currentItemIdxForDisplayDate {
-        let interestedDate = displayDates[currentItemIdxForDisplayDate]
-
-        if enableDebugMessages {
-          let dateFormatter = DateFormatter()
-          dateFormatter.locale = Locale(identifier: "en")
-          dateFormatter.timeZone = engineCalendar.timeZone
-          dateFormatter.dateFormat = "dd-MMMM-yyyy-EEEE"
-          dateFormatter.calendar = engineCalendar
-          let stringValue = dateFormatter.string(from: interestedDate)
-
-          dateFormatter.calendar = Calendar(identifier: .gregorian)
-          let gregStringValue = dateFormatter.string(from: interestedDate)
-
-          debugPrint("\n\nclicked on - \n\(engineCalendar.identifier) -> \(stringValue)\n\(Calendar.Identifier.gregorian) -> \(gregStringValue)")
+        if appearenceOptions.enableDebugMessages {
+          debugPrint(timeline.debugDateDescription(interestedDate))
         }
 
-        let isDateFromNotSelectedMonth = !displayDatesForCurrentMonth.contains(where: { engineCalendar.isDate($0, inSameDayAs: interestedDate) })
+        let isDateFromNotSelectedMonth = !timeline.displayDatesForCurrentMonth.contains(where: { calendar.isDate($0, inSameDayAs: interestedDate) })
         if isDateFromNotSelectedMonth,
-          !enableEnclosingMonthSelection {
-          if enableDebugMessages {
+          !appearenceOptions.enableEnclosingMonthSelection {
+          if appearenceOptions.enableDebugMessages {
             debugPrint("enableEnclosingMonthSelection disable")
           }
           return
         }
 
-        if showEnclosingMonths {
-          assert(buildItems.count == displayDates.count + dayNamesCount, "invalid data generation logic")
+        if appearenceOptions.showEnclosingMonths {
+          assert(buildItems.count == timeline.displayDates.count + timeline.dayNamesCount, "invalid data generation logic")
         }
 
         guard let target = collectionView.cellForItem(at: indexPath) as? CalendarItemSelectable,
@@ -1044,32 +859,34 @@ extension CalendarView: UICollectionViewDelegate {
           case .single:
             assert(selectedDates.count == 1 || selectedDates.isEmpty,
                    "invalid logic for single selection - check store index logic")
-            if let index = selectedDates.firstIndex(where: { engineCalendar.isDate($0, inSameDayAs: interestedDate) }),
-              let indexInStorage = displayDates.firstIndex(where: { engineCalendar.isDate($0, inSameDayAs: interestedDate) }) {
+              if let index = selectedDates.firstIndex(where: { calendar.isDate($0, inSameDayAs: interestedDate) }),
+                let indexInStorage = timeline.displayDates.firstIndex(where: { calendar.isDate($0, inSameDayAs: interestedDate) }) {
 
-              if enablseSingleDeselectionForSingleMode {
+              if appearenceOptions.enablseSingleDeselectionForSingleMode {
                 selectedDates.remove(at: index)
                 assert(selectedDates.isEmpty,
                        "invalid logic for single selection - check store index logic")
-                let prevIndex = indexInStorage + startIndex
+                let prevIndex = indexInStorage + timeline.startIndex
+
                 let prevIndexPathSelected = IndexPath(item: prevIndex, section: 0)
                 let prevSelected = collectionView.cellForItem(at: prevIndexPathSelected) as? CalendarItemSelectable
                 if let prevBuildItem = buildItems[prevIndexPathSelected.item - offsetForBuildItemFetch] as? CalendarDateItemPresentable {
                   prevSelected?.selectItem(false, item: prevBuildItem)
                 }
 
-                if showEnclosingMonths,
-                  hightlightCurrentMonth {
-                  let isDateFromNotSelectedMonth = !displayDatesForCurrentMonth.contains(where: { engineCalendar.isDate($0, inSameDayAs: interestedDate) })
+                if appearenceOptions.showEnclosingMonths,
+                  appearenceOptions.hightlightCurrentMonth {
+                  let isDateFromNotSelectedMonth = !timeline.displayDatesForCurrentMonth.contains(where: { calendar.isDate($0, inSameDayAs: interestedDate) })
+
                   target.markCellAsInactive(isDateFromNotSelectedMonth, item: buildItem)
                 }
 
-                dateSelectionDelegate?.calendarView(self, configuredFor: engineCalendar, and: engineLocale, didDetectDateSelectionChangeFor: interestedDate, selectionType: .deselect)
+                dateSelectionDelegate?.calendarView(self, configuredFor: calendar, and: locale, didDetectDateSelectionChangeFor: interestedDate, selectionType: .deselect)
                 return
               } else {
                 let date = selectedDates[index]
-                if engineCalendar.isDate(date, inSameDayAs: interestedDate) {
-                  if enableDebugMessages {
+                if calendar.isDate(date, inSameDayAs: interestedDate) {
+                  if appearenceOptions.enableDebugMessages {
                     debugPrint("same item selection")
                   }
                   return
@@ -1082,44 +899,43 @@ extension CalendarView: UICollectionViewDelegate {
                        "invalid logic for single selection - check store index logic")
                 if let date = selectedDates.first {
 
-                  if engineCalendar.isDate(date, inSameDayAs: interestedDate) {
+                  if calendar.isDate(date, inSameDayAs: interestedDate) {
                     return
                   }
 
-                  if let indexInStorage = displayDates.firstIndex(where: { engineCalendar.isDate($0, inSameDayAs: date) }) {
-                    let prevIndex = indexInStorage + startIndex
+                  if let indexInStorage = timeline.displayDates.firstIndex(where: { calendar.isDate($0, inSameDayAs: date) }) {
+                    let prevIndex = indexInStorage + timeline.startIndex
+
                     let prevIndexPathSelected = IndexPath(item: prevIndex, section: 0)
                     let prevSelected = collectionView.cellForItem(at: prevIndexPathSelected) as? CalendarItemSelectable
                     if let prevBuildItem = buildItems[prevIndexPathSelected.item - offsetForBuildItemFetch] as? CalendarDateItemPresentable {
                       prevSelected?.selectItem(false, item: prevBuildItem)
                     }
 
-                    if showEnclosingMonths,
-                      hightlightCurrentMonth {
-                      let isDateFromNotSelectedMonth = !displayDatesForCurrentMonth.contains(where: { engineCalendar.isDate($0, inSameDayAs: interestedDate) })
+                    if appearenceOptions.showEnclosingMonths,
+                      appearenceOptions.hightlightCurrentMonth {
+                      let isDateFromNotSelectedMonth = !timeline.displayDatesForCurrentMonth.contains(where: { calendar.isDate($0, inSameDayAs: interestedDate) })
                       target.markCellAsInactive(isDateFromNotSelectedMonth, item: buildItem)
                     }
                   }
 
-                  dateSelectionDelegate?.calendarView(self, configuredFor: engineCalendar, and: engineLocale, didDetectDateSelectionChangeFor: date, selectionType: .deselect)
-
+                  dateSelectionDelegate?.calendarView(self, configuredFor: calendar, and: locale, didDetectDateSelectionChangeFor: date, selectionType: .deselect)
                   selectedDates.removeAll()
                 } else {
                   assertionFailure("invalid storage access for selected dates")
                 }
               }
-          }
+            }
 
             var canSelectDate = true
             if let eventDelegate = dateSelectionDelegate {
-              canSelectDate = eventDelegate.calendarView(self, configuredFor: engineCalendar, and: engineLocale, shouldSelect: interestedDate)
+              canSelectDate = eventDelegate.calendarView(self, configuredFor: calendar, and: locale, shouldSelect: interestedDate)
             }
 
             if canSelectDate {
               target.selectItem(true, item: buildItem)
               selectedDates.append(interestedDate)
-
-              dateSelectionDelegate?.calendarView(self, configuredFor: engineCalendar, and: engineLocale, didDetectDateSelectionChangeFor: interestedDate, selectionType: .select)
+              dateSelectionDelegate?.calendarView(self, configuredFor: calendar, and: locale, didDetectDateSelectionChangeFor: interestedDate, selectionType: .select)
             }
         }
       }
@@ -1132,6 +948,9 @@ extension CalendarView: UICollectionViewDelegate {
 
     if let delegate = layoutDelegate {
 
+      let calendar = timeline.underlineCalendar
+      let locale = timeline.underlineLocale
+
       guard let target = cell as? CalendarItemConfigurable else {
           assertionFailure("invalid cast for selection")
           return
@@ -1143,15 +962,14 @@ extension CalendarView: UICollectionViewDelegate {
       if let _ = CalendarWeekDayViewPosition(rawValue: indexPath.item) {
         date = nil
       } else {
-        let currentItemIdxForDisplayDate = indexPath.item - startIndex
-
-        if indexPath.item >= startIndex,
-          displayDates.count > currentItemIdxForDisplayDate {
-          date = displayDates[currentItemIdxForDisplayDate]
+        let currentItemIdxForDisplayDate = indexPath.item - timeline.startIndex
+        if indexPath.item >= timeline.startIndex,
+          timeline.displayDates.count > currentItemIdxForDisplayDate {
+          date = timeline.displayDates[currentItemIdxForDisplayDate]
         }
       }
 
-      delegate.calendarView(self, willDisplay: target, for: buildItem, configuredFor: engineCalendar, and: engineLocale, forDate: date)
+      delegate.calendarView(self, willDisplay: target, for: buildItem, configuredFor: calendar, and: locale, forDate: date)
     }
   }
 }
@@ -1171,7 +989,7 @@ extension CalendarView: UICollectionViewDelegateFlowLayout {
   public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
     switch stretchMode {
       case .center:
-        return Defines.Layout.spacing
+        return CalendarViewDefines.Layout.spacing
       case .fillWidth:
         let expectedCountsInLineFloat = CGFloat(Defines.Calendar.deysInWeek)
         let occupation = expectedCountsInLineFloat * sizeForItem().width
@@ -1181,7 +999,7 @@ extension CalendarView: UICollectionViewDelegateFlowLayout {
   }
 
   public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-    return Defines.Layout.spacing
+    return CalendarViewDefines.Layout.spacing
   }
 
   // MARK: - Private
@@ -1189,16 +1007,16 @@ extension CalendarView: UICollectionViewDelegateFlowLayout {
   private func sizeForItem() -> CGSize {
     let targetWidth = expectedContentSize.width
     let supportLinesCountForWeekDayName = 1
-    let totalSpacing = Defines.Layout.spacing * CGFloat(Defines.Calendar.deysInWeek - 1 + supportLinesCountForWeekDayName)
+    let totalSpacing = CalendarViewDefines.Layout.spacing * CGFloat(Defines.Calendar.deysInWeek - 1 + supportLinesCountForWeekDayName)
     let sideSize = (targetWidth - totalSpacing) / CGFloat(Defines.Calendar.deysInWeek)
 
     switch stretchMode {
     case .center:
       return CGSize(width: sideSize, height: sideSize)
     case .fillWidth:
-      var rowsCount = CGFloat(startIndex + displayDates.count) / CGFloat(Defines.Calendar.deysInWeek)
-      if showEnclosingMonths {
-        rowsCount = CGFloat(displayDates.count + dayNamesCount) / CGFloat(Defines.Calendar.deysInWeek)
+      var rowsCount = CGFloat(timeline.startIndex + timeline.displayDates.count) / CGFloat(Defines.Calendar.deysInWeek)
+      if appearenceOptions.showEnclosingMonths {
+        rowsCount = CGFloat(timeline.displayDates.count + timeline.dayNamesCount) / CGFloat(Defines.Calendar.deysInWeek)
       }
 
       let sideHeight = (expectedContentSize.height - totalSpacing) / CGFloat(rowsCount)
