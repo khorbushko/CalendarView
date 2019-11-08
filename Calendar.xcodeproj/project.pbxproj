@@ -13,7 +13,7 @@
 		0E1B8DE8237186FB00EAA6F5 /* UICollectionView+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B8DE7237186FB00EAA6F5 /* UICollectionView+Animations.swift */; };
 		0E1B8DEA2371884700EAA6F5 /* CalendarDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B8DE92371884700EAA6F5 /* CalendarDefines.swift */; };
 		0E1B8DF02371B36000EAA6F5 /* UmmAlQuraData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B8DEF2371B36000EAA6F5 /* UmmAlQuraData.swift */; };
-		0E1B8DF22371B3AF00EAA6F5 /* UmmAlQuaraDateConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B8DF12371B3AF00EAA6F5 /* UmmAlQuaraDateConverter.swift */; };
+		0E1B8DF22371B3AF00EAA6F5 /* UmmAlQuraDateConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B8DF12371B3AF00EAA6F5 /* UmmAlQuraDateConverter.swift */; };
 		0E1B8DF423730E1C00EAA6F5 /* TimeLineDataProvidable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B8DF323730E1C00EAA6F5 /* TimeLineDataProvidable.swift */; };
 		0E21E74E23224ED90013ED0E /* CalendarViewContentStretchMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E21E74D23224ED90013ED0E /* CalendarViewContentStretchMode.swift */; };
 		0E2E6214231CECD600D0A062 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2E6213231CECD600D0A062 /* AppDelegate.swift */; };
@@ -46,6 +46,8 @@
 		0E34FEF7231FC4C5009642EA /* MyCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E34FEF6231FC4C5009642EA /* MyCustomCell.swift */; };
 		0E34FEF9231FC4CC009642EA /* MyCustomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E34FEF8231FC4CC009642EA /* MyCustomCell.xib */; };
 		0E34FEFB231FC595009642EA /* MyDateItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E34FEFA231FC595009642EA /* MyDateItem.swift */; };
+		0E6DBAD223756D7400809187 /* CalendarTimelineGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6DBAD123756D7400809187 /* CalendarTimelineGenerator.swift */; };
+		0E6DBAD42375752B00809187 /* UmmAlQuraTimelineGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6DBAD32375752B00809187 /* UmmAlQuraTimelineGenerator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,7 +57,7 @@
 		0E1B8DE7237186FB00EAA6F5 /* UICollectionView+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Animations.swift"; sourceTree = "<group>"; };
 		0E1B8DE92371884700EAA6F5 /* CalendarDefines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDefines.swift; sourceTree = "<group>"; };
 		0E1B8DEF2371B36000EAA6F5 /* UmmAlQuraData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UmmAlQuraData.swift; sourceTree = "<group>"; };
-		0E1B8DF12371B3AF00EAA6F5 /* UmmAlQuaraDateConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UmmAlQuaraDateConverter.swift; sourceTree = "<group>"; };
+		0E1B8DF12371B3AF00EAA6F5 /* UmmAlQuraDateConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UmmAlQuraDateConverter.swift; sourceTree = "<group>"; };
 		0E1B8DF323730E1C00EAA6F5 /* TimeLineDataProvidable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLineDataProvidable.swift; sourceTree = "<group>"; };
 		0E21E74D23224ED90013ED0E /* CalendarViewContentStretchMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewContentStretchMode.swift; sourceTree = "<group>"; };
 		0E2E6210231CECD600D0A062 /* Calendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,6 +92,8 @@
 		0E34FEF6231FC4C5009642EA /* MyCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCustomCell.swift; sourceTree = "<group>"; };
 		0E34FEF8231FC4CC009642EA /* MyCustomCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyCustomCell.xib; sourceTree = "<group>"; };
 		0E34FEFA231FC595009642EA /* MyDateItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDateItem.swift; sourceTree = "<group>"; };
+		0E6DBAD123756D7400809187 /* CalendarTimelineGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTimelineGenerator.swift; sourceTree = "<group>"; };
+		0E6DBAD32375752B00809187 /* UmmAlQuraTimelineGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UmmAlQuraTimelineGenerator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				0E1B8DEB2371B2F400EAA6F5 /* CustomEngines */,
+				0E6DBAD023756D5E00809187 /* TimelineGenerator */,
 				0E1B8DE423716F5B00EAA6F5 /* CustomTimeLineIdentifier.swift */,
 				0E1B8DE223716F4900EAA6F5 /* TimelineIdentifier.swift */,
 				0E1B8DF323730E1C00EAA6F5 /* TimeLineDataProvidable.swift */,
@@ -135,7 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				0E1B8DEF2371B36000EAA6F5 /* UmmAlQuraData.swift */,
-				0E1B8DF12371B3AF00EAA6F5 /* UmmAlQuaraDateConverter.swift */,
+				0E1B8DF12371B3AF00EAA6F5 /* UmmAlQuraDateConverter.swift */,
 			);
 			path = UmmAlQura;
 			sourceTree = "<group>";
@@ -262,6 +267,15 @@
 			path = Element;
 			sourceTree = "<group>";
 		};
+		0E6DBAD023756D5E00809187 /* TimelineGenerator */ = {
+			isa = PBXGroup;
+			children = (
+				0E6DBAD123756D7400809187 /* CalendarTimelineGenerator.swift */,
+				0E6DBAD32375752B00809187 /* UmmAlQuraTimelineGenerator.swift */,
+			);
+			path = TimelineGenerator;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -338,7 +352,7 @@
 			files = (
 				0E34FED7231E5C6B009642EA /* CalendarItemSelectable.swift in Sources */,
 				0E1B8DE323716F4900EAA6F5 /* TimelineIdentifier.swift in Sources */,
-				0E1B8DF22371B3AF00EAA6F5 /* UmmAlQuaraDateConverter.swift in Sources */,
+				0E1B8DF22371B3AF00EAA6F5 /* UmmAlQuraDateConverter.swift in Sources */,
 				0E1B8DE523716F5B00EAA6F5 /* CustomTimeLineIdentifier.swift in Sources */,
 				0E2E6236231D3DE600D0A062 /* CalendarYear.swift in Sources */,
 				0E2E6216231CECD600D0A062 /* ViewController.swift in Sources */,
@@ -350,6 +364,7 @@
 				0E1B8DF423730E1C00EAA6F5 /* TimeLineDataProvidable.swift in Sources */,
 				0E34FED5231E5BB2009642EA /* CalendarItemPresentable.swift in Sources */,
 				0E2E622E231CEFA900D0A062 /* CalendarViewCollectionViewCell.swift in Sources */,
+				0E6DBAD223756D7400809187 /* CalendarTimelineGenerator.swift in Sources */,
 				0E1B8DE123716E4A00EAA6F5 /* Timeline.swift in Sources */,
 				0E34FEE0231E7BE8009642EA /* CalendarDateItemPresentable.swift in Sources */,
 				0E34FEDE231E7BD5009642EA /* CalendarWeekDayItemPresentable.swift in Sources */,
@@ -368,6 +383,7 @@
 				0E2E6227231CED2600D0A062 /* CalendarView.swift in Sources */,
 				0E1B8DF02371B36000EAA6F5 /* UmmAlQuraData.swift in Sources */,
 				0E34FEF5231E9682009642EA /* CalendarWeekDayViewPosition.swift in Sources */,
+				0E6DBAD42375752B00809187 /* UmmAlQuraTimelineGenerator.swift in Sources */,
 				0E2E622C231CED6B00D0A062 /* Nibable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,10 +8,15 @@
 
 import UIKit
 
+@dynamicMemberLookup
 final public class Timeline {
 
-  private (set) var underlineCalendar: Calendar
-  private (set) var underlineLocale: Locale
+  subscript<T>(dynamicMember keyPath: KeyPath<TimeLineGenerator, T>) -> T {
+    return engine[keyPath: keyPath]
+  }
+
+  private var engine: TimeLineGenerator
+
   private (set) var identifier: TimelineIdentifier
 
   internal private (set) var activeDate: Date = Date()
@@ -21,10 +26,6 @@ final public class Timeline {
     let count = weekDayNameStyle == .none ? 0 : Defines.Calendar.deysInWeek
     return count
   }
-
-  lazy var ummAlQuraConverter: UmmAlQuaraDateConverter = {
-    UmmAlQuaraDateConverter()
-  }()
 
   var displayDates: [Date] {
     displayDatesForPrevMonth + displayDatesForCurrentMonth + displayDatesForNextMonth
@@ -41,10 +42,12 @@ final public class Timeline {
   // MARK: - LifeCycle
 
   private init(_ calendar: Calendar, locale: Locale) {
-    underlineCalendar = calendar
-    underlineCalendar.timeZone = TimeZone.autoupdatingCurrent
-    underlineLocale = locale
+    var calendarObj = calendar
+    calendarObj.timeZone = TimeZone.autoupdatingCurrent
+    calendarObj.locale = locale
+
     identifier = .system(calendar.identifier)
+    engine = calendarObj
   }
 
   convenience init(_ identifier: Calendar.Identifier, locale: Locale) {
@@ -56,11 +59,9 @@ final public class Timeline {
   init(_ identifier: CustomTimeLineIdentifier, locale: Locale) {
     switch identifier {
       case .ummAlQura:
-        underlineCalendar = .init(identifier: .islamicUmmAlQura)
-        underlineCalendar.timeZone = TimeZone.autoupdatingCurrent
+        engine = UmmAlQuraTimeLineGenerator(locale: locale)
     }
 
-    underlineLocale = locale
     self.identifier = .custom(identifier)
   }
 
@@ -68,14 +69,14 @@ final public class Timeline {
 
   internal func adoptedDateFormatter() -> DateFormatter {
     let dateFormatter = DateFormatter()
-    dateFormatter.locale = underlineLocale
-    dateFormatter.calendar = underlineCalendar
+    dateFormatter.locale = engine.underlineLocale
+    dateFormatter.calendar = engine.underlineCalendar
 
     return dateFormatter
   }
 
   internal func isDateInToday(_ date: Date) -> Bool {
-    underlineCalendar.isDateInToday(date)
+    engine.isDateInTodayDate(date)
   }
 
   func prepareMonthTimelineForCurrentlySelectedDate() {
@@ -98,7 +99,8 @@ final public class Timeline {
 
     for idx in stride(from: rangeOfDaysThisMonth.lowerBound, to: rangeOfDaysThisMonth.upperBound, by: 1) {
       currentComponents.day = idx
-      if let dateToShow = underlineCalendar.date(from: currentComponents) {
+      if let dateToShow = engine.dateFromComponents(currentComponents) {
+
         displayDatesForCurrentMonth.append(dateToShow)
       } else {
         assertionFailure("can't generate date for selcted range")
@@ -107,7 +109,7 @@ final public class Timeline {
 
     if !displayDates.isEmpty,
       let firstOfTheMonth = displayDates.first {
-      let weekday = underlineCalendar.component(.weekday, from: firstOfTheMonth)
+      let weekday = engine.weekdayIndexFromDate(firstOfTheMonth)
 
       if weekday == 7 {
         startIndex = dayNamesCount + (dayNamesCount - 1)
@@ -128,7 +130,7 @@ final public class Timeline {
       for idx in stride(from: rangeOfDaysPrevMonth.upperBound - offsetForDate, to: rangeOfDaysPrevMonth.upperBound, by: 1) {
         prevComponents?.day = idx
         if let comp = prevComponents,
-          let dateToShow = underlineCalendar.date(from: comp) {
+            let dateToShow = engine.dateFromComponents(comp) {
 
           displayDatesForPrevMonth.append(dateToShow)
         } else {
@@ -137,9 +139,8 @@ final public class Timeline {
       }
 
       var nextComponents = nextMonthDateComponents()
-
       if let lastOfTheMonth = displayDatesForCurrentMonth.last {
-        let weekday = underlineCalendar.component(.weekday, from: lastOfTheMonth)
+          let weekday = engine.weekdayIndexFromDate(lastOfTheMonth)
 
         var daysToFetch = Defines.Calendar.deysInWeek - weekday
 
@@ -155,7 +156,8 @@ final public class Timeline {
           for idx in stride(from: rangeOfDaysNextMonth.lowerBound, to: rangeOfDaysNextMonth.lowerBound + daysToFetch, by: 1) {
             nextComponents?.day = idx
             if let comp = nextComponents,
-              let dateToShow = underlineCalendar.date(from: comp) {
+              let dateToShow = engine.dateFromComponents(comp) {
+
               displayDatesForNextMonth.append(dateToShow)
             } else {
               assertionFailure("can't generate date for selected next month range")
@@ -178,110 +180,41 @@ final public class Timeline {
     }
   }
 
-  // MARK: - Builders
-
-  func MOCK() {
-    switch self.identifier {
-      case .system:
-      break
-      case .custom(let identifier):
-        switch identifier {
-          case .ummAlQura:
-            break
-      }
-    }
-
-  }
+  // MARK: - Engine
 
   // MARK: - PrevMonth Info
 
   private func prevMonthRange() -> Range<Int>? {
-    if let prevMonthDate = underlineCalendar.prevMonth(from: activeDate) {
-      return underlineCalendar.range(of: .day, in: .month, for: prevMonthDate)
-    }
-
-    return nil
+    engine.prevMonthRange(activeDate)
   }
 
   private func prevMonthDateComponents() -> DateComponents? {
-    if let prevMonthDate = underlineCalendar.prevMonth(from: activeDate) {
-      let componentsToReturn = componentsFromDate(prevMonthDate)
-      return componentsToReturn
-    }
-
-    return nil
+    engine.prevMonthDateComponents(activeDate)
   }
 
   // MARK: - CurrentMonth Info
 
   private func currentMonthRange() -> Range<Int>? {
-    underlineCalendar.range(of: .day, in: .month, for: activeDate)
+    engine.currentMonthRange(activeDate)
   }
 
   private func currentMonthDateComponents() -> DateComponents {
-    switch self.identifier {
-      case .system:
-        let componentsToReturn = componentsFromDate(activeDate)
-        return componentsToReturn
-      case .custom(let identifier):
-        switch identifier {
-          case .ummAlQura:
-            let components = ummAlQuraConverter.currentMonthDateComponents(from: activeDate)
-            return components
-      }
-    }
+    engine.currentMonthDateComponents(activeDate)
   }
 
   // MARK: - NextMonth Info
 
   private func nextMonthRange() -> Range<Int>? {
-    if let nextMonthDate = underlineCalendar.nextMonth(from: activeDate) {
-      return underlineCalendar.range(of: .day, in: .month, for: nextMonthDate)
-    }
-
-    return nil
+    engine.nextMonthRange(activeDate)
   }
 
   private func nextMonthDateComponents() -> DateComponents? {
-    if let nextMonthDate = underlineCalendar.nextMonth(from: activeDate) {
-      let componentsToReturn = componentsFromDate(nextMonthDate)
-      return componentsToReturn
-    }
-
-    return nil
-  }
-
-  // MARK: - Config
-
-  private func componentsFromDate(_ date: Date) -> DateComponents {
-    var componentsToReturn = underlineCalendar.dateComponents([.day, .month, .year, .era, .weekday], from: date)
-    componentsToReturn.timeZone = underlineCalendar.timeZone
-
-    componentsToReturn.hour = 0
-    componentsToReturn.minute = 0
-    componentsToReturn.second = 0
-    return componentsToReturn
+    engine.nextMonthDateComponents(activeDate)
   }
 
   // MARK: - DEBUG
 
   internal func debugDateDescription(_ interestedDate: Date) -> String {
-    let dateFormatter = debugDateFormatter()
-    let stringValue = dateFormatter.string(from: interestedDate)
-
-    dateFormatter.calendar = Calendar(identifier: .gregorian)
-    let gregStringValue = dateFormatter.string(from: interestedDate)
-
-    let debugString = "\n\nclicked on - \n\(underlineCalendar.identifier) -> \(stringValue)\n\(Calendar.Identifier.gregorian) -> \(gregStringValue)"
-    return debugString
-  }
-
-  private func debugDateFormatter() -> DateFormatter {
-    let dateFormatter = DateFormatter()
-    dateFormatter.locale = Locale(identifier: "en")
-    dateFormatter.timeZone = underlineCalendar.timeZone
-    dateFormatter.dateFormat = "dd-MMMM-yyyy-EEEE"
-    dateFormatter.calendar = underlineCalendar
-    return dateFormatter
+    engine.debugDateDescription(interestedDate)
   }
 }
