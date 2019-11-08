@@ -22,6 +22,10 @@ final public class Timeline {
     return count
   }
 
+  lazy var ummAlQuraConverter: UmmAlQuaraDateConverter = {
+    UmmAlQuaraDateConverter()
+  }()
+
   var displayDates: [Date] {
     displayDatesForPrevMonth + displayDatesForCurrentMonth + displayDatesForNextMonth
   }
@@ -52,7 +56,7 @@ final public class Timeline {
   init(_ identifier: CustomTimeLineIdentifier, locale: Locale) {
     switch identifier {
       case .ummAlQura:
-        underlineCalendar = .init(identifier: .gregorian)
+        underlineCalendar = .init(identifier: .islamicUmmAlQura)
         underlineCalendar.timeZone = TimeZone.autoupdatingCurrent
     }
 
@@ -176,6 +180,19 @@ final public class Timeline {
 
   // MARK: - Builders
 
+  func MOCK() {
+    switch self.identifier {
+      case .system:
+      break
+      case .custom(let identifier):
+        switch identifier {
+          case .ummAlQura:
+            break
+      }
+    }
+
+  }
+
   // MARK: - PrevMonth Info
 
   private func prevMonthRange() -> Range<Int>? {
@@ -202,8 +219,17 @@ final public class Timeline {
   }
 
   private func currentMonthDateComponents() -> DateComponents {
-    let componentsToReturn = componentsFromDate(activeDate)
-    return componentsToReturn
+    switch self.identifier {
+      case .system:
+        let componentsToReturn = componentsFromDate(activeDate)
+        return componentsToReturn
+      case .custom(let identifier):
+        switch identifier {
+          case .ummAlQura:
+            let components = ummAlQuraConverter.currentMonthDateComponents(from: activeDate)
+            return components
+      }
+    }
   }
 
   // MARK: - NextMonth Info

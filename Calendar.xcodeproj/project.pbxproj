@@ -14,6 +14,7 @@
 		0E1B8DEA2371884700EAA6F5 /* CalendarDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B8DE92371884700EAA6F5 /* CalendarDefines.swift */; };
 		0E1B8DF02371B36000EAA6F5 /* UmmAlQuraData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B8DEF2371B36000EAA6F5 /* UmmAlQuraData.swift */; };
 		0E1B8DF22371B3AF00EAA6F5 /* UmmAlQuaraDateConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B8DF12371B3AF00EAA6F5 /* UmmAlQuaraDateConverter.swift */; };
+		0E1B8DF423730E1C00EAA6F5 /* TimeLineDataProvidable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B8DF323730E1C00EAA6F5 /* TimeLineDataProvidable.swift */; };
 		0E21E74E23224ED90013ED0E /* CalendarViewContentStretchMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E21E74D23224ED90013ED0E /* CalendarViewContentStretchMode.swift */; };
 		0E2E6214231CECD600D0A062 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2E6213231CECD600D0A062 /* AppDelegate.swift */; };
 		0E2E6216231CECD600D0A062 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2E6215231CECD600D0A062 /* ViewController.swift */; };
@@ -55,6 +56,7 @@
 		0E1B8DE92371884700EAA6F5 /* CalendarDefines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDefines.swift; sourceTree = "<group>"; };
 		0E1B8DEF2371B36000EAA6F5 /* UmmAlQuraData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UmmAlQuraData.swift; sourceTree = "<group>"; };
 		0E1B8DF12371B3AF00EAA6F5 /* UmmAlQuaraDateConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UmmAlQuaraDateConverter.swift; sourceTree = "<group>"; };
+		0E1B8DF323730E1C00EAA6F5 /* TimeLineDataProvidable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLineDataProvidable.swift; sourceTree = "<group>"; };
 		0E21E74D23224ED90013ED0E /* CalendarViewContentStretchMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewContentStretchMode.swift; sourceTree = "<group>"; };
 		0E2E6210231CECD600D0A062 /* Calendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E2E6213231CECD600D0A062 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 				0E1B8DEB2371B2F400EAA6F5 /* CustomEngines */,
 				0E1B8DE423716F5B00EAA6F5 /* CustomTimeLineIdentifier.swift */,
 				0E1B8DE223716F4900EAA6F5 /* TimelineIdentifier.swift */,
+				0E1B8DF323730E1C00EAA6F5 /* TimeLineDataProvidable.swift */,
 				0E1B8DE023716E4A00EAA6F5 /* Timeline.swift */,
 			);
 			path = Timeline;
@@ -344,6 +347,7 @@
 				0E34FEEA231E8023009642EA /* CalendarSelectionType.swift in Sources */,
 				0E34FEE4231E7FE4009642EA /* CalendarDisplayDataType.swift in Sources */,
 				0E2E6232231D1DA900D0A062 /* Calendar+Range.swift in Sources */,
+				0E1B8DF423730E1C00EAA6F5 /* TimeLineDataProvidable.swift in Sources */,
 				0E34FED5231E5BB2009642EA /* CalendarItemPresentable.swift in Sources */,
 				0E2E622E231CEFA900D0A062 /* CalendarViewCollectionViewCell.swift in Sources */,
 				0E1B8DE123716E4A00EAA6F5 /* Timeline.swift in Sources */,

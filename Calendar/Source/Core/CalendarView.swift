@@ -567,6 +567,11 @@ final public class CalendarView: UIView, Nibable {
     switchToDate(activeDate)
   }
 
+  public func switchToCustomCalendarType(_ identifier: CustomTimeLineIdentifier, locale: Locale) {
+    setupCalendar(identifier, locale: locale)
+    switchToDate(activeDate)
+  }
+
   // MARK: - Private Navigation
 
   private func callbacksForDate(_ date: Date) {
@@ -674,6 +679,11 @@ final public class CalendarView: UIView, Nibable {
   }
 
   private func setupCalendar(_ identifier: Calendar.Identifier, locale: Locale) {
+    timeline = Timeline(identifier, locale: locale)
+    showTimelineForSelectedDate()
+  }
+
+  private func setupCalendar(_ identifier: CustomTimeLineIdentifier, locale: Locale) {
     timeline = Timeline(identifier, locale: locale)
     showTimelineForSelectedDate()
   }

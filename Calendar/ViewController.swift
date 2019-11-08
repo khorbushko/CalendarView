@@ -40,7 +40,9 @@ final class ViewController: UIViewController {
   }
 
   @IBAction private func hijryCalendar(_ sender: Any) {
-    calendarView.switchToCalendarType(.islamic, locale: Locale(identifier: "ar"))
+//    calendarView.switchToCalendarType(.islamic, locale: Locale(identifier: "ar"))
+//    calendarView.switchToCalendarType(.islamicTabular, locale: Locale(identifier: "ar"))
+    calendarView.switchToCustomCalendarType(.ummAlQura, locale: Locale(identifier: "ar"))
   }
 
   @IBAction private func changeYear(_ sender: UIStepper) {
