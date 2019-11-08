@@ -740,19 +740,24 @@ extension CalendarView: UICollectionViewDataSource {
         symbols = [String].init(repeating: "", count: Defines.Calendar.deysInWeek)
       }
 
-      let name = symbols[dayName.rawValue]
-      var buildItem: CalendarWeekDayItemPresentable = CalendarDateItem(weekDayName: name,
-                                                                       calendar: calendar,
-                                                                       locale: locale)
-      if let configDelegate = itemProviderDelegate {
-        buildItem = configDelegate.calendarView(self,
-                                                didRequestWeekDayItemFor: weekDayNameStyle,
-                                                forWeekNameItem: dayName,
-                                                poposedName: name,
-                                                calendar: calendar,
-                                                locale: locale)
+      var buildItem: CalendarItemPresentable
+      if buildItems.count > indexPath.row {
+        buildItem = buildItems[indexPath.row]
+      } else {
+        let name = symbols[dayName.rawValue]
+        if let configDelegate = itemProviderDelegate {
+          buildItem = configDelegate.calendarView(self,
+                                                  didRequestWeekDayItemFor: weekDayNameStyle,
+                                                  forWeekNameItem: dayName,
+                                                  poposedName: name,
+                                                  calendar: calendar,
+                                                  locale: locale)
+        } else {
+          buildItem = CalendarDateItem(weekDayName: name, calendar: calendar, locale: locale)
+        }
+
+        buildItems.append(buildItem)
       }
-      buildItems.append(buildItem)
 
       let cellResuseIdentifier = type(of: buildItem).calendarItemIdentifier
       cellToReturn = collectionView.dequeueReusableCell(withReuseIdentifier: cellResuseIdentifier, for: indexPath)
@@ -771,12 +776,22 @@ extension CalendarView: UICollectionViewDataSource {
         timeline.displayDates.count > currentItemIdx {
         let dateToShow = timeline.displayDates[currentItemIdx]
 
-        var buildItem: CalendarDateItemPresentable = CalendarDateItem(date: dateToShow, calendar: calendar, locale: locale)
-        if let configDelegate = itemProviderDelegate {
-          buildItem = configDelegate.calendarView(self, didRequestDateItemFor: dateToShow, calendar: calendar, locale: locale)
+        var generatedBuildItem: CalendarItemPresentable
+        if buildItems.count > indexPath.row {
+          generatedBuildItem = buildItems[indexPath.row]
+        } else {
+          if let configDelegate = itemProviderDelegate {
+            generatedBuildItem = configDelegate.calendarView(self, didRequestDateItemFor: dateToShow, calendar: calendar, locale: locale)
+          } else {
+            generatedBuildItem = CalendarDateItem(date: dateToShow, calendar: calendar, locale: locale)
+          }
+
+          buildItems.append(generatedBuildItem)
         }
 
-        buildItems.append(buildItem)
+        guard let buildItem = generatedBuildItem as? CalendarDateItemPresentable else {
+          fatalError("invalid builditem generation logic")
+        }
 
         let cellResuseIdentifier = type(of: buildItem).calendarItemIdentifier
         cellToReturn = collectionView.dequeueReusableCell(withReuseIdentifier: cellResuseIdentifier, for: indexPath)
