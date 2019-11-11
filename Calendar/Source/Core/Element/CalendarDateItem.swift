@@ -30,6 +30,11 @@ public final class CalendarDateItem: CalendarDateItemPresentable, CalendarWeekDa
     let stringValue = dateFormatter.string(from: date)
     self.title = stringValue
 
+    if calendar.identifier == .islamicTabular {
+      let comp = UmmAlQuraDateConverter().convertDateToUmmAlQura(date: date)
+      self.title = "\(comp.0)"
+    }
+
     dateFormatter.locale = Locale(identifier: "en")
     dateFormatter.calendar = Calendar(identifier: .gregorian)
     let stringValueForSubtitle = dateFormatter.string(from: date)

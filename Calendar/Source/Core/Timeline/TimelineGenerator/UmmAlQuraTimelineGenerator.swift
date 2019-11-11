@@ -40,15 +40,17 @@ final class UmmAlQuraTimeLineGenerator: TimeLineGenerator {
         dateComponents.month != nil,
           dateComponents.year != nil {
       let comp: DateTransfromedComponents = (dateComponents.day!, dateComponents.month!, dateComponents.year!)
-      let date = dateConverter.convertComponentsToUmmAlQuraDate(comp)
-      return date
+      let gregComponents = dateConverter.convertToGregorian(hYear: comp.2, hMonth: comp.1, hDay: comp.0)
+
+      let targetDate = dateConverter.convertComponentToDate(gregComponents, using: underlineRefCalendar)
+      return targetDate
     }
 
     return nil
   }
 
   func weekdayIndexFromDate(_ date: Date) -> Int {
-    underlineRefCalendar.component(.weekday, from: date)
+    dateConverter.weekdayUmmAlQura(from: date)
   }
 
   // MARK: - Generation
@@ -87,8 +89,8 @@ final class UmmAlQuraTimeLineGenerator: TimeLineGenerator {
   }
 
   func nextMonthDateComponents(_ currentDate: Date) -> DateComponents? {
-    let nextMonthDate: DateTransfromedComponents = dateConverter.nextMonthInUmmAlQura(from: currentDate)
-    let components: DateComponents = dateConverter.convertComponentToDateCompoment(nextMonthDate)
+    let nextMonthComponents: DateTransfromedComponents = dateConverter.nextMonthInUmmAlQura(from: currentDate)
+    let components: DateComponents = dateConverter.convertComponentToDateCompoment(nextMonthComponents)
     return components
   }
 
@@ -135,13 +137,6 @@ fileprivate extension UmmAlQuraDateConverter {
     return prevMonthComponents
   }
 
-  func prevMonthInUmmAlQura(from gregorianDate: Date) -> Date? {
-    let prevMonthComponents: DateTransfromedComponents = prevMonthInUmmAlQura(from: gregorianDate)
-    let prevMonthInUmmAlQuraDate = convertComponentsToUmmAlQuraDate(prevMonthComponents)
-
-    return prevMonthInUmmAlQuraDate
-  }
-
   // MARK: - NextMonth
 
   func nextMonthInUmmAlQura(from gregorianDate: Date) -> DateTransfromedComponents {
@@ -158,20 +153,7 @@ fileprivate extension UmmAlQuraDateConverter {
     return nextMonthComponents
   }
 
-  func nextMonthInUmmAlQura(from gregorianDate: Date) -> Date? {
-    let nextMonthComponents: DateTransfromedComponents = nextMonthInUmmAlQura(from: gregorianDate)
-    let nextMonthInUmmAlQuraDate = convertComponentsToUmmAlQuraDate(nextMonthComponents)
-
-    return nextMonthInUmmAlQuraDate
-  }
-
   // MARK: - Utils
-
-  func convertComponentsToUmmAlQuraDate(_ component: DateTransfromedComponents) -> Date? {
-    let calendar = Calendar(identifier: .islamicUmmAlQura)
-    let date = convertComponentToDate(component, using: calendar)
-    return date
-  }
 
   func convertComponentToDateCompoment(_ component: DateTransfromedComponents) -> DateComponents {
     var components = DateComponents()
@@ -182,7 +164,7 @@ fileprivate extension UmmAlQuraDateConverter {
     return components
   }
 
-  private func convertComponentToDate(_ component: DateTransfromedComponents, using calendar: Calendar) -> Date? {
+  func convertComponentToDate(_ component: DateTransfromedComponents, using calendar: Calendar) -> Date? {
     let components: DateComponents = convertComponentToDateCompoment(component)
     let target = calendar.date(from: components)
     return target

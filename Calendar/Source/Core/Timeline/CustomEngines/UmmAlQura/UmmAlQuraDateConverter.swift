@@ -99,6 +99,13 @@ internal final class UmmAlQuraDateConverter {
     return length
   }
 
+  func weekdayUmmAlQura(from gregorianDate: Date) -> Int {
+    let components = convertDateToUmmAlQura(date: gregorianDate)
+    let index = hijiryToDays(hijiryYear: components.2, hijiryMonth: components.1, hijiryDay: components.0)
+    let day = (index + 1) % 7
+    return day + 1
+  }
+
   // MARK: - Private
 
   private func daysToUmmAlQura(jdn: Int) -> DateTransfromedComponents {

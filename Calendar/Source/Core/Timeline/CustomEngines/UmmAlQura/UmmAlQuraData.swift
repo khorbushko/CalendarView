@@ -10,7 +10,7 @@ import Foundation
 
 internal enum UmmAlQuaraCalendarData {
 
-  /// 1356 to 1500 AH (16 November 2077 CE).
+  /// 1356 AH (14 March 1937 CE) to 1500 AH (16 November 2077 CE)
   ///
   /// Outside this interval, the converter will give erroneous results.
   ///
