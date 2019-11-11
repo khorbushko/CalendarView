@@ -78,7 +78,7 @@ final public class Timeline {
 
   // MARK: - Public
 
-  func suggestedDisplayDateString(from date: Date) -> String {
+  public func suggestedDisplayDateString(from date: Date) -> String {
 
     switch identifier {
       case .system:
