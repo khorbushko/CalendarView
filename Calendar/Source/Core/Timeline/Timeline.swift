@@ -8,6 +8,14 @@
 
 import UIKit
 
+/**
+ Object that responsible for generating ranges of dates for selected TimelineIdentifier model
+ also holds info about current date source, selected calendar and locale
+
+ - Version: 0.21
+ - Tag: 1003
+ */
+
 @dynamicMemberLookup
 final public class Timeline {
 
@@ -63,6 +71,36 @@ final public class Timeline {
     }
 
     self.identifier = .custom(identifier)
+  }
+
+  // MARK: - Public
+
+  func suggestedDisplayDateString(from date: Date) -> String {
+
+    switch identifier {
+      case .system:
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = self.underlineLocale
+        dateFormatter.calendar = self.underlineCalendar
+        dateFormatter.dateFormat = "d"
+        let dateString = dateFormatter.string(from: date)
+        return dateString
+
+      case .custom(let cutomCalendarEngine):
+        switch cutomCalendarEngine {
+          case .ummAlQura:
+            let comp = UmmAlQuraDateConverter().convertDateToUmmAlQura(date: date)
+            let dateString = "\(comp.0)"
+
+            let formatter = NumberFormatter()
+            formatter.locale = Locale(identifier: "ar")
+            if let localized = formatter.string(from: NSNumber(value: comp.0)) {
+              return "\(localized)"
+            }
+
+            return dateString
+      }
+    }
   }
 
   // MARK: - Internal

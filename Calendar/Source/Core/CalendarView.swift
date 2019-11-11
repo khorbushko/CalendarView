@@ -47,25 +47,24 @@ public protocol CalendarViewItemProviderDelegate: class {
 
    Sample:
 
-         func calendarView(_ calendarView: CalendarView, didRequestDateItemFor date: Date, calendar: Calendar, locale: Locale) -> CalendarDateItemPresentable {
-            /*create any item from provided array types in func above*/
-            let item = MyDateItem(date: date, calendar: calendar, locale: locale)
-            return item
-         }
+   func calendarView(_ calendarView: CalendarView, didRequestDateItemFor date: Date, calendar: Calendar, locale: Locale) -> CalendarDateItemPresentable {
+   /*create any item from provided array types in func above*/
+   let item = MyDateItem(date: date, calendar: calendar, locale: locale)
+   return item
+   }
 
    - Parameter calendarView: Object that holds all logic related to calendar
    - Parameter date: Date for which requested build item
-   - Parameter calendar: Underline calendar that currently active in view
-   - Parameter locale: Locale that used within calendar.
+   - Parameter timeline: Object that contains info about generator of date, calendar and locale
+                          see [Timeline](x-source-tag://1003)
 
-    *Note:* Sometimes you can mix `locale` and `calendar.locale` (**not recommended**)
+   *Note:* Sometimes you can mix `locale` and `calendar.locale` (**not recommended**)
    - Returns: object that represent data for specific date, see [CalendarDateItemPresentable](x-source-tag://4002)
-   - Version: 0.1
+   - Version: 0.21
    */
   func calendarView(_ calendarView: CalendarView,
                     didRequestDateItemFor date: Date,
-                    calendar: Calendar,
-                    locale: Locale) -> CalendarDateItemPresentable
+                    timeline: Timeline) -> CalendarDateItemPresentable
 
   /**
    Ask instance of registered components for WeekDayItem.
@@ -83,20 +82,19 @@ public protocol CalendarViewItemProviderDelegate: class {
    - Parameter style: Symbol style - check [CalendarWeekSymbolType](x-source-tag://2004) for more
    - Parameter item: WeekDay representation - check [CalendarWeekDayViewPosition](x-source-tag://2000) for more
    - Parameter name: Proposed name format according to settings
-   - Parameter calendar: Underline calendar that currently active in view
-   - Parameter locale: Locale that used within calendar.
+   - Parameter timeline: Object that contains info about generator of date, calendar and locale
+                        see [Timeline](x-source-tag://1003)
 
    - SeeAlso: [CalendarWeekSymbolType](x-source-tag://2004), [CalendarWeekDayViewPosition](x-source-tag://2000)
 
    *Note:* Sometimes you can mix `locale` and `calendar.locale` (**not recommended**)
-   - Version: 0.1
+   - Version: 0.21
    */
   func calendarView(_ calendarView: CalendarView,
                     didRequestWeekDayItemFor style: CalendarWeekSymbolType,
                     forWeekNameItem item: CalendarWeekDayViewPosition,
                     poposedName name: String,
-                    calendar: Calendar,
-                    locale: Locale) -> CalendarWeekDayItemPresentable
+                    timeline: Timeline) -> CalendarWeekDayItemPresentable
 
   /**
    Called on each instance of view that was configured with provided build items at very end
@@ -112,15 +110,14 @@ public protocol CalendarViewItemProviderDelegate: class {
    - Parameter cell: `UICollectioViewCell` instance that was provided in [CalendarDateItemPresentable](x-source-tag://4002) and conform [CalendarItemConfigurable](x-source-tag://4003)
    - Parameter buildItem: [CalendarItemPresentable](x-source-tag://4000) instance used for configuration this cell
    - Parameter date: Date for which requested build item
-   - Parameter calendar: Underline calendar that currently active in view
-   - Parameter locale: Locale that used within calendar.
-   - Version: 0.1
+   - Parameter timeline: Object that contains info about generator of date, calendar and locale
+                        see [Timeline](x-source-tag://1003)
+   - Version: 0.21
    */
   func calendarView(_ calendarView: CalendarView,
                     didCompleteConfigure cell: CalendarItemConfigurable,
                     for buildItem: CalendarItemPresentable,
-                    configuredFor calendar: Calendar,
-                    and locale: Locale,
+                    configuredFor timeline: Timeline,
                     forDate date: Date?)
 }
 
@@ -136,15 +133,14 @@ public protocol CalendarViewItemLayoutDelegate: class {
    - Parameter cell: `UICollectioViewCell` instance that was provided in [CalendarDateItemPresentable](x-source-tag://4002) and conform [CalendarItemConfigurable](x-source-tag://4003)
    - Parameter buildItem: [CalendarItemPresentable](x-source-tag://4000) instance used for configuration this cell
    - Parameter date: Date for which requested build item
-   - Parameter calendar: Underline calendar that currently active in view
-   - Parameter locale: Locale that used within calendar.
-   - Version: 0.1
+   - Parameter timeline: Object that contains info about generator of date, calendar and locale
+                          see [Timeline](x-source-tag://1003)
+   - Version: 0.21
    */
   func calendarView(_ calendarView: CalendarView,
                     willDisplay cell: CalendarItemConfigurable,
                     for buildItem: CalendarItemPresentable,
-                    configuredFor calendar: Calendar,
-                    and locale: Locale,
+                    configuredFor timeline: Timeline,
                     forDate date: Date?)
 }
 
@@ -157,33 +153,31 @@ public protocol CalendarViewDateSelectionEventDelegate: class {
    Ask the delegate if selection of date is enabled
 
    - Parameter calendarView: Object that holds all logic related to calendar
-   - Parameter calendar: Underline calendar that currently active in view
-   - Parameter locale: Locale that used within calendar.
+   - Parameter timeline: Object that contains info about generator of date, calendar and locale
+                          see [Timeline](x-source-tag://1003)
    - Parameter date: Date that is about to select
 
    - Returns: Enabled or disabled selection
-   - Version: 0.1
+   - Version: 0.21
    */
   func calendarView(_ calendarView: CalendarView,
-                    configuredFor calendar: Calendar,
-                    and locale: Locale,
+                    configuredFor timeline: Timeline,
                     shouldSelect date: Date) -> Bool
 
   /**
    Tell to delegate about selection event
 
    - Parameter calendarView: Object that holds all logic related to calendar
-   - Parameter calendar: Underline calendar that currently active in view
-   - Parameter locale: Locale that used within calendar.
+   - Parameter timeline: Object that contains info about generator of date, calendar and locale
+                        see [Timeline](x-source-tag://1003)
    - Parameter date: Target date
    - Parameter selectionType: Indicate action - select or deselect, see [CalendarDateSelectionOperation](x-source-tag://2001) for more
 
    - Returns: Enabled or disabled selection
-   - Version: 0.1
+   - Version: 0.21
    */
   func calendarView(_ calendarView: CalendarView,
-                    configuredFor calendar: Calendar,
-                    and locale: Locale,
+                    configuredFor timeline: Timeline,
                     didDetectDateSelectionChangeFor date: Date,
                     selectionType: CalendarDateSelectionOperation)
 }
@@ -198,54 +192,51 @@ public protocol CalendarViewItemEventDelegate: CalendarViewDateSelectionEventDel
    Tell to delegate about additional event - month change
 
    - Parameter calendarView: Object that holds all logic related to calendar
-   - Parameter calendar: Underline calendar that currently active in view
-   - Parameter locale: Locale that used within calendar.
+   - Parameter timeline: Object that contains info about generator of date, calendar and locale
+                        see [Timeline](x-source-tag://1003)
    - Parameter month: This object represent changed item - month, see [CalendarMonth](x-source-tag://3001) for more
 
    Note: May be called even repeatedly
-   - Version: 0.1
+   - Version: 0.21
    */
   func calendarView(_ calendarView: CalendarView,
-                    configuredFor calendar: Calendar,
-                    and locale: Locale,
+                    configuredFor timeline: Timeline,
                     didChangeMonth month: CalendarMonth)
 
   /**
    Tell to delegate about additional event - year change
 
    - Parameter calendarView: Object that holds all logic related to calendar
-   - Parameter calendar: Underline calendar that currently active in view
-   - Parameter locale: Locale that used within calendar.
+   - Parameter timeline: Object that contains info about generator of date, calendar and locale
+                          see [Timeline](x-source-tag://1003)
    - Parameter year: This object represent changed item - year, see [CalendarYear](x-source-tag://3000) for more
 
    Note: May be called even repeatedly
-   - Version: 0.1
+   - Version: 0.21
    */
   func calendarView(_ calendarView: CalendarView,
-                    configuredFor calendar: Calendar,
-                    and locale: Locale,
+                    configuredFor timeline: Timeline,
                     didChangeYear year: CalendarYear)
 
   /**
    Tell to delegate about additional event - selection date array change
 
    - Parameter calendarView: Object that holds all logic related to calendar
-   - Parameter calendar: Underline calendar that currently active in view
-   - Parameter locale: Locale that used within calendar.
+   - Parameter timeline: Object that contains info about generator of date, calendar and locale
+                          see [Timeline](x-source-tag://1003)
    - Parameter dates: Array of selected dates after any change
-   - Version: 0.1
+   - Version: 0.21
    */
   func calendarView(_ calendarView: CalendarView,
-                    configuredFor calendar: Calendar,
-                    and locale: Locale,
+                    configuredFor timeline: Timeline,
                     didChangeSelectedDates dates: [Date])
 
   /**
    Tell to delegate about additional event - user interaction with WeekDay section
 
    - Parameter calendarView: Object that holds all logic related to calendar
-   - Parameter calendar: Underline calendar that currently active in view
-   - Parameter locale: Locale that used within calendar.
+   - Parameter timeline: Object that contains info about generator of date, calendar and locale
+                        see [Timeline](x-source-tag://1003)
    - Parameter weekDay: Tapped weekday, check [CalendarWeekDayViewPosition](x-source-tag://2000) for more
 
    Note: if you need only this event, consider to use
@@ -253,11 +244,10 @@ public protocol CalendarViewItemEventDelegate: CalendarViewDateSelectionEventDel
         var currentlySelectedDates: [Date] { get }
 
    instead
-   - Version: 0.1
+   - Version: 0.21
    */
   func calendarView(_ calendarView: CalendarView,
-                    configuredFor calendar: Calendar,
-                    and locale: Locale,
+                    configuredFor timeline: Timeline,
                     didDetectWeekDayNameSelection weekDay: CalendarWeekDayViewPosition)
 }
 
@@ -334,9 +324,7 @@ final public class CalendarView: UIView, Nibable {
   private var selectionStyle: CalendarSelectionType = .single
   private var selectedDates: [Date] = [] {
     didSet {
-      let calendar = timeline.underlineCalendar
-      let locale = timeline.underlineLocale
-      eventDelegate?.calendarView(self, configuredFor: calendar, and: locale, didChangeSelectedDates: selectedDates)
+      eventDelegate?.calendarView(self, configuredFor: timeline, didChangeSelectedDates: selectedDates)
     }
   }
 
@@ -580,8 +568,8 @@ final public class CalendarView: UIView, Nibable {
 
     if let month = CalendarMonth(date: date, calendar: calendar.identifier, locale: locale),
       let year = CalendarYear(date: date, calendar: calendar.identifier, locale: locale) {
-      eventDelegate?.calendarView(self, configuredFor: calendar, and: locale, didChangeYear: year)
-      eventDelegate?.calendarView(self, configuredFor: calendar, and: locale, didChangeMonth: month)
+      eventDelegate?.calendarView(self, configuredFor: timeline, didChangeYear: year)
+      eventDelegate?.calendarView(self, configuredFor: timeline, didChangeMonth: month)
     }
   }
 
@@ -718,7 +706,6 @@ extension CalendarView: UICollectionViewDataSource {
     var cellToReturn: UICollectionViewCell?
     let dateFormatter = timeline.adoptedDateFormatter()
     let calendar = timeline.underlineCalendar
-    let locale = timeline.underlineLocale
 
     if weekDayNameStyle != .none,
       let dayName = CalendarWeekDayViewPosition(rawValue: indexPath.item) {
@@ -750,10 +737,9 @@ extension CalendarView: UICollectionViewDataSource {
                                                   didRequestWeekDayItemFor: weekDayNameStyle,
                                                   forWeekNameItem: dayName,
                                                   poposedName: name,
-                                                  calendar: calendar,
-                                                  locale: locale)
+                                                  timeline: timeline)
         } else {
-          buildItem = CalendarDateItem(weekDayName: name, calendar: calendar, locale: locale)
+          buildItem = CalendarDateItem(weekDayName: name, timeline: timeline)
         }
 
         buildItems.append(buildItem)
@@ -766,7 +752,7 @@ extension CalendarView: UICollectionViewDataSource {
       configurableCell?.setupWith(buildItem)
 
       if let confCell = cellToReturn as? CalendarItemConfigurable {
-        itemProviderDelegate?.calendarView(self, didCompleteConfigure: confCell, for: buildItem, configuredFor: calendar, and: locale, forDate: nil)
+        itemProviderDelegate?.calendarView(self, didCompleteConfigure: confCell, for: buildItem, configuredFor: timeline, forDate: nil)
       }
 
     } else {
@@ -781,9 +767,9 @@ extension CalendarView: UICollectionViewDataSource {
           generatedBuildItem = buildItems[indexPath.row]
         } else {
           if let configDelegate = itemProviderDelegate {
-            generatedBuildItem = configDelegate.calendarView(self, didRequestDateItemFor: dateToShow, calendar: calendar, locale: locale)
+            generatedBuildItem = configDelegate.calendarView(self, didRequestDateItemFor: dateToShow, timeline: timeline)
           } else {
-            generatedBuildItem = CalendarDateItem(date: dateToShow, calendar: calendar, locale: locale)
+            generatedBuildItem = CalendarDateItem(date: dateToShow, timeline: timeline)
           }
 
           buildItems.append(generatedBuildItem)
@@ -817,7 +803,7 @@ extension CalendarView: UICollectionViewDataSource {
         }
 
         if let confCell = configurableCell {
-          itemProviderDelegate?.calendarView(self, didCompleteConfigure: confCell, for: buildItem, configuredFor: calendar, and: locale, forDate: dateToShow)
+          itemProviderDelegate?.calendarView(self, didCompleteConfigure: confCell, for: buildItem, configuredFor: timeline, forDate: dateToShow)
         }
       } else {
         if !appearenceOptions.showEnclosingMonths {
@@ -847,10 +833,9 @@ extension CalendarView: UICollectionViewDelegate {
   public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
     let calendar = timeline.underlineCalendar
-    let locale = timeline.underlineLocale
 
     if let weekDay = CalendarWeekDayViewPosition(rawValue: indexPath.item) {
-      eventDelegate?.calendarView(self, configuredFor: calendar, and: locale, didDetectWeekDayNameSelection: weekDay)
+      eventDelegate?.calendarView(self, configuredFor: timeline, didDetectWeekDayNameSelection: weekDay)
     } else {
       let currentItemIdxForDisplayDate = indexPath.item - timeline.startIndex
       if indexPath.item >= timeline.startIndex,
@@ -906,7 +891,7 @@ extension CalendarView: UICollectionViewDelegate {
                   target.markCellAsInactive(isDateFromNotSelectedMonth, item: buildItem)
                 }
 
-                dateSelectionDelegate?.calendarView(self, configuredFor: calendar, and: locale, didDetectDateSelectionChangeFor: interestedDate, selectionType: .deselect)
+                dateSelectionDelegate?.calendarView(self, configuredFor: timeline, didDetectDateSelectionChangeFor: interestedDate, selectionType: .deselect)
                 return
               } else {
                 let date = selectedDates[index]
@@ -944,7 +929,7 @@ extension CalendarView: UICollectionViewDelegate {
                     }
                   }
 
-                  dateSelectionDelegate?.calendarView(self, configuredFor: calendar, and: locale, didDetectDateSelectionChangeFor: date, selectionType: .deselect)
+                  dateSelectionDelegate?.calendarView(self, configuredFor: timeline, didDetectDateSelectionChangeFor: date, selectionType: .deselect)
                   selectedDates.removeAll()
                 } else {
                   assertionFailure("invalid storage access for selected dates")
@@ -954,13 +939,13 @@ extension CalendarView: UICollectionViewDelegate {
 
             var canSelectDate = true
             if let eventDelegate = dateSelectionDelegate {
-              canSelectDate = eventDelegate.calendarView(self, configuredFor: calendar, and: locale, shouldSelect: interestedDate)
+              canSelectDate = eventDelegate.calendarView(self, configuredFor: timeline, shouldSelect: interestedDate)
             }
 
             if canSelectDate {
               target.selectItem(true, item: buildItem)
               selectedDates.append(interestedDate)
-              dateSelectionDelegate?.calendarView(self, configuredFor: calendar, and: locale, didDetectDateSelectionChangeFor: interestedDate, selectionType: .select)
+              dateSelectionDelegate?.calendarView(self, configuredFor: timeline, didDetectDateSelectionChangeFor: interestedDate, selectionType: .select)
             }
         }
       }
@@ -972,10 +957,6 @@ extension CalendarView: UICollectionViewDelegate {
     cell.layoutIfNeeded()
 
     if let delegate = layoutDelegate {
-
-      let calendar = timeline.underlineCalendar
-      let locale = timeline.underlineLocale
-
       guard let target = cell as? CalendarItemConfigurable else {
           assertionFailure("invalid cast for selection")
           return
@@ -994,7 +975,7 @@ extension CalendarView: UICollectionViewDelegate {
         }
       }
 
-      delegate.calendarView(self, willDisplay: target, for: buildItem, configuredFor: calendar, and: locale, forDate: date)
+      delegate.calendarView(self, willDisplay: target, for: buildItem, configuredFor: timeline, forDate: date)
     }
   }
 }

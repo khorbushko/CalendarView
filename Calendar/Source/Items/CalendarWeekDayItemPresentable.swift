@@ -21,8 +21,9 @@ public protocol CalendarWeekDayItemPresentable: CalendarItemPresentable {
   // MARK: - CalendarWeekDayItemPresentable
 
   /// Default initializator for CalendarDateItemPresentable
-  ///  - Parameter calendar: Underline calendar that currently active in view
-  ///  - Parameter locale: Locale that used within calendar.
+  ///  - Parameter timeline: Underline object that can provide
+  ///   detailed info about current date source, selected calendar and locale
   ///  - Parameter weekDayName: Proposed weekday name according to selected style, see [CalendarWeekSymbolType](x-source-tag://2004)
-  init(weekDayName: String, calendar: Calendar, locale: Locale)
+  init(weekDayName: String, timeline: Timeline)
+
 }

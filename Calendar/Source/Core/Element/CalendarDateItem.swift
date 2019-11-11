@@ -21,28 +21,21 @@ public final class CalendarDateItem: CalendarDateItemPresentable, CalendarWeekDa
 
   // MARK: - Init
 
-  public required init(date: Date, calendar: Calendar, locale: Locale) {
+  public required init(date: Date, timeline: Timeline) {
+    let dateString = timeline.suggestedDisplayDateString(from: date)
+    self.title = dateString
+
     let dateFormatter = DateFormatter()
-    dateFormatter.locale = locale
-    dateFormatter.calendar = calendar
-    dateFormatter.dateFormat = "d"
-
-    let stringValue = dateFormatter.string(from: date)
-    self.title = stringValue
-
-    if calendar.identifier == .islamicTabular {
-      let comp = UmmAlQuraDateConverter().convertDateToUmmAlQura(date: date)
-      self.title = "\(comp.0)"
-    }
-
     dateFormatter.locale = Locale(identifier: "en")
+    dateFormatter.dateFormat = "d"
     dateFormatter.calendar = Calendar(identifier: .gregorian)
     let stringValueForSubtitle = dateFormatter.string(from: date)
+
     self._subtitle = stringValueForSubtitle
     self.isHeader = false
   }
 
-  public required init(weekDayName: String, calendar: Calendar, locale: Locale) {
+  public required init(weekDayName: String, timeline: Timeline) {
     self.title = weekDayName
     self.isHeader = true
   }
