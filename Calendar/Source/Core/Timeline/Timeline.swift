@@ -19,6 +19,9 @@ import UIKit
 @dynamicMemberLookup
 final public class Timeline {
 
+  public var calendar: Calendar { self.underlineCalendar }
+  public var locale: Locale { self.underlineLocale }
+
   subscript<T>(dynamicMember keyPath: KeyPath<TimeLineGenerator, T>) -> T {
     return engine[keyPath: keyPath]
   }
