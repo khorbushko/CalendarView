@@ -155,14 +155,41 @@ Also u can use different options for changing behaviour of app.
 
 ```
 
+##### additional
+
+Calendar view also provide custom calendar such as `UmmAlQuaraCalendar` in range from 1356 AH (14 March 1937 CE) to 1500 AH (16 November 2077 CE)
+Note: Outside this interval, the converter will give erroneous results
+Description available here [www.staff.science.uu.nl](http://www.staff.science.uu.nl/~gent0113/islam/ummalqura.htm)
+
+based on:
+* [Keith-Wood calendar](http://keith-wood.name/calendars.html)
+* [github.com/kbwood](https://github.com/kbwood/calendars/blob/master/dist/js/jquery.calendars.ummalqura.js
+kbwood/calendarsjQuery World Calendars Plugin. Contribute to kbwood/calendars development by creating an account on GitHub.github.com)
+
+Links:
+* [en.wikipedia.org](http://en.wikipedia.org/wiki/Islamic_calendar#Saudi_Arabia.27s_Umm_al-Qura_calendar)
+* [ummulqura.org](http://www.ummulqura.org.sa/About.aspx)
+* [science.uu.nl](http://www.staff.science.uu.nl/~gent0113/islam/ummalqura.htm)
+
+usage:
+
+```swift
+
+// somewhere in your code
+   calendarView.switchToCustomCalendarType(.ummAlQura, locale: Locale(identifier: "ar"))
+
+```
+
+
 #### Samples:
 
 <div class="row">
   <div class="column">
-    <p align="center">
-      <img alt="demo" src="./blobs/s_1.png" width="300">
-      <img alt="demo" src="./blobs/s_2.png" width="300">
-      <img alt="demo" src="./blobs/s_4.png" width="300">
+    <p align="justify">
+      <img alt="demo" src="./blobs/s_1.png" width="250">
+      <img alt="demo" src="./blobs/s_2.png" width="250">
+      <img alt="demo" src="./blobs/s_4.png" width="250">
+      <img alt="demo" src="./blobs/s_5.png" width="250">
     </p>
   </div>
 </div>
