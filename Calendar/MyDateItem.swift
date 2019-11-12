@@ -37,17 +37,12 @@ final class MyDateItem: CalendarDateItemPresentable, CalendarWeekDayItemPresenta
     return UIFont.systemFont(ofSize: 10, weight: .bold)
   }
 
-  public required init(date: Date, calendar: Calendar, locale: Locale) {
-    let dateFormatter = DateFormatter()
-    dateFormatter.locale = locale
-    dateFormatter.calendar = calendar
-    dateFormatter.dateFormat = "d"
-
-    let stringValue = dateFormatter.string(from: date)
-    self.title = stringValue
+  public required init(date: Date, timeline: Timeline) {
+    let dateString = timeline.suggestedDisplayDateString(from: date)
+    self.title = dateString
   }
 
-  public required init(weekDayName: String, calendar: Calendar, locale: Locale) {
+  public required init(weekDayName: String, timeline: Timeline) {
     self.title = weekDayName
   }
 

@@ -21,10 +21,10 @@ public protocol CalendarDateItemPresentable: CalendarItemPresentable {
   // MARK: - CalendarDateItemPresentable
 
   /// Default initializator for CalendarDateItemPresentable
-  ///  - Parameter calendar: Underline calendar that currently active in view
-  ///  - Parameter locale: Locale that used within calendar.
+  ///  - Parameter timeline: Underline object that can provide
+  ///   detailed info about current date source, selected calendar and locale
   ///  - Parameter date: Date that is about to select
-  init(date: Date, calendar: Calendar, locale: Locale)
+  init(date: Date, timeline: Timeline)
 
   // MARK: - Subtitle
 

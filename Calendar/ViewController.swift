@@ -40,7 +40,9 @@ final class ViewController: UIViewController {
   }
 
   @IBAction private func hijryCalendar(_ sender: Any) {
-    calendarView.switchToCalendarType(.islamicUmmAlQura, locale: Locale(identifier: "ar"))
+//    calendarView.switchToCalendarType(.islamic, locale: Locale(identifier: "ar"))
+//    calendarView.switchToCalendarType(.islamicTabular, locale: Locale(identifier: "ar"))
+    calendarView.switchToCustomCalendarType(.ummAlQura, locale: Locale(identifier: "ar"))
   }
 
   @IBAction private func changeYear(_ sender: UIStepper) {
@@ -78,17 +80,17 @@ final class ViewController: UIViewController {
 }
 
 extension ViewController: CalendarViewDateSelectionEventDelegate {
-  func calendarView(_ calendarView: CalendarView, configuredFor calendar: Calendar, and locale: Locale, shouldSelect date: Date) -> Bool {
+  func calendarView(_ calendarView: CalendarView, configuredFor timeline: Timeline, shouldSelect date: Date) -> Bool {
     return true
   }
 
-  func calendarView(_ calendarView: CalendarView, configuredFor calendar: Calendar, and locale: Locale, didDetectDateSelectionChangeFor date: Date, selectionType: CalendarDateSelectionOperation) {
+  func calendarView(_ calendarView: CalendarView, configuredFor timeline: Timeline, didDetectDateSelectionChangeFor date: Date, selectionType: CalendarDateSelectionOperation) {
 
     let dateFormatter = DateFormatter()
     dateFormatter.locale = Locale(identifier: "en")
-    dateFormatter.timeZone = calendar.timeZone
+    dateFormatter.timeZone = timeline.underlineCalendar.timeZone
     dateFormatter.dateFormat = "dd-MMMM-yyyy-EEEE"
-    dateFormatter.calendar = calendar
+    dateFormatter.calendar = timeline.underlineCalendar
     let stringValue = dateFormatter.string(from: date)
 
     dateFormatter.calendar = Calendar(identifier: .gregorian)
@@ -96,7 +98,7 @@ extension ViewController: CalendarViewDateSelectionEventDelegate {
 
     label.text =
 """
-    \(selectionType)\n\(calendar.identifier) -> \(stringValue)\n\(Calendar.Identifier.gregorian) -> \(gregStringValue)
+    \(selectionType)\n\(timeline.underlineCalendar.identifier) -> \(stringValue)\n\(Calendar.Identifier.gregorian) -> \(gregStringValue)
 """
   }
 }
@@ -108,9 +110,9 @@ extension ViewController: CalendarViewItemProviderDelegate {
     return [MyDateItem.self]
   }
 
-  func calendarView(_ calendarView: CalendarView, didRequestDateItemFor date: Date, calendar: Calendar, locale: Locale) -> CalendarDateItemPresentable {
+  func calendarView(_ calendarView: CalendarView, didRequestDateItemFor date: Date, timeline: Timeline) -> CalendarDateItemPresentable {
     /*create any item from provided array types in func above*/
-    let item = MyDateItem(date: date, calendar: calendar, locale: locale)
+    let item = MyDateItem(date: date, timeline: timeline)
     return item
   }
 
@@ -118,15 +120,14 @@ extension ViewController: CalendarViewItemProviderDelegate {
                     didRequestWeekDayItemFor style: CalendarWeekSymbolType,
                     forWeekNameItem item: CalendarWeekDayViewPosition,
                     poposedName name: String,
-                    calendar: Calendar,
-                    locale: Locale) -> CalendarWeekDayItemPresentable {
+                    timeline: Timeline) -> CalendarWeekDayItemPresentable {
     /*create any item from provided array types in func above*/
     /*check poposedName and style and modify if u want*/
-    let item = MyDateItem(weekDayName: name, calendar: calendar, locale: locale)
+    let item = MyDateItem(weekDayName: name, timeline: timeline)
     return item
   }
 
-  func calendarView(_ calendarView: CalendarView, didCompleteConfigure cell: CalendarItemConfigurable, for buildItem: CalendarItemPresentable, configuredFor calendar: Calendar, and locale: Locale, forDate date: Date?) {
+  func calendarView(_ calendarView: CalendarView, didCompleteConfigure cell: CalendarItemConfigurable, for buildItem: CalendarItemPresentable, configuredFor timeline: Timeline, forDate date: Date?) {
     /*modify cell additionally as u wish here*/
   }
 }
