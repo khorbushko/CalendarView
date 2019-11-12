@@ -126,10 +126,10 @@ fileprivate extension UmmAlQuraDateConverter {
   func prevMonthInUmmAlQura(from gregorianDate: Date) -> DateTransfromedComponents {
     let targetDateComponent = self.convertDateToUmmAlQura(date: gregorianDate)
     let month = targetDateComponent.1
-    let prevMonth = month == 0 ? 12 : (month - 1)
+    let prevMonth = month == 0 ? 11 : (month - 1)
     var prevYear = targetDateComponent.2
     let day = 1
-    if prevMonth == 12 {
+    if prevMonth == 11 {
       prevYear -= 1
     }
 
@@ -142,7 +142,7 @@ fileprivate extension UmmAlQuraDateConverter {
   func nextMonthInUmmAlQura(from gregorianDate: Date) -> DateTransfromedComponents {
     let targetDateComponent = self.convertDateToUmmAlQura(date: gregorianDate)
     let month = targetDateComponent.1
-    let nextMonth = month == 12 ? 0 : (month + 1)
+    let nextMonth = month == 11 ? 0 : (month + 1)
     var nextYear = targetDateComponent.2
     let day = 1
     if nextMonth == 0 {
