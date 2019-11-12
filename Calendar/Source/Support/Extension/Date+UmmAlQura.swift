@@ -8,14 +8,17 @@
 
 import Foundation
 
-public typealias DateString = String
-public typealias MonthString = String
-public typealias YearString = String
+public typealias DateValue = Int
+public typealias MonthValue = Int
+public typealias YearValue = Int
 
 public extension Date {
 
-  func ummAlQuraDateToStringComponents() -> (DateString, MonthString, YearString) {
+  func ummAlQuraDateToStringComponents() -> (date: DateValue, month: MonthValue, year: YearValue) {
     let comp = UmmAlQuraDateConverter().convertDateToUmmAlQura(date: self)
-    return ("\(comp.0)", "\(comp.1)", "\(comp.2)")
+    let day = comp.0
+    let month = comp.1 == 0 ? 12 : comp.1
+    let year = comp.1 == 0 ? comp.2 - 1 : comp.2
+    return (day, month, year)
   }
 }
