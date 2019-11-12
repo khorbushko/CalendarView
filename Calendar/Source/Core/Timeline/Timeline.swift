@@ -76,36 +76,6 @@ final public class Timeline {
     self.identifier = .custom(identifier)
   }
 
-  // MARK: - Public
-
-  public func suggestedDisplayDateString(from date: Date) -> String {
-
-    switch identifier {
-      case .system:
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = self.underlineLocale
-        dateFormatter.calendar = self.underlineCalendar
-        dateFormatter.dateFormat = "d"
-        let dateString = dateFormatter.string(from: date)
-        return dateString
-
-      case .custom(let cutomCalendarEngine):
-        switch cutomCalendarEngine {
-          case .ummAlQura:
-            let comp = UmmAlQuraDateConverter().convertDateToUmmAlQura(date: date)
-            let dateString = "\(comp.0)"
-
-            let formatter = NumberFormatter()
-            formatter.locale = Locale(identifier: "ar")
-            if let localized = formatter.string(from: NSNumber(value: comp.0)) {
-              return "\(localized)"
-            }
-
-            return dateString
-      }
-    }
-  }
-
   // MARK: - Internal
 
   internal func adoptedDateFormatter() -> DateFormatter {
@@ -258,4 +228,38 @@ final public class Timeline {
   internal func debugDateDescription(_ interestedDate: Date) -> String {
     engine.debugDateDescription(interestedDate)
   }
+}
+
+extension Timeline {
+  
+  // MARK: - Public
+
+  public func suggestedDisplayDateString(from date: Date) -> String {
+
+    switch identifier {
+      case .system:
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = self.underlineLocale
+        dateFormatter.calendar = self.underlineCalendar
+        dateFormatter.dateFormat = "d"
+        let dateString = dateFormatter.string(from: date)
+        return dateString
+
+      case .custom(let cutomCalendarEngine):
+        switch cutomCalendarEngine {
+          case .ummAlQura:
+            let comp = UmmAlQuraDateConverter().convertDateToUmmAlQura(date: date)
+            let dateString = "\(comp.0)"
+
+            let formatter = NumberFormatter()
+            formatter.locale = Locale(identifier: "ar")
+            if let localized = formatter.string(from: NSNumber(value: comp.0)) {
+              return "\(localized)"
+            }
+
+            return dateString
+      }
+    }
+  }
+
 }

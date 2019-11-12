@@ -48,6 +48,7 @@
 		0E34FEFB231FC595009642EA /* MyDateItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E34FEFA231FC595009642EA /* MyDateItem.swift */; };
 		0E6DBAD223756D7400809187 /* CalendarTimelineGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6DBAD123756D7400809187 /* CalendarTimelineGenerator.swift */; };
 		0E6DBAD42375752B00809187 /* UmmAlQuraTimelineGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6DBAD32375752B00809187 /* UmmAlQuraTimelineGenerator.swift */; };
+		0E6DBADE237ADDC500809187 /* Date+UmmAlQura.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6DBADD237ADDC500809187 /* Date+UmmAlQura.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -94,6 +95,7 @@
 		0E34FEFA231FC595009642EA /* MyDateItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDateItem.swift; sourceTree = "<group>"; };
 		0E6DBAD123756D7400809187 /* CalendarTimelineGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTimelineGenerator.swift; sourceTree = "<group>"; };
 		0E6DBAD32375752B00809187 /* UmmAlQuraTimelineGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UmmAlQuraTimelineGenerator.swift; sourceTree = "<group>"; };
+		0E6DBADD237ADDC500809187 /* Date+UmmAlQura.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+UmmAlQura.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				0E1B8DE7237186FB00EAA6F5 /* UICollectionView+Animations.swift */,
+				0E6DBADD237ADDC500809187 /* Date+UmmAlQura.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -357,6 +360,7 @@
 				0E2E6236231D3DE600D0A062 /* CalendarYear.swift in Sources */,
 				0E2E6216231CECD600D0A062 /* ViewController.swift in Sources */,
 				0E34FEF7231FC4C5009642EA /* MyCustomCell.swift in Sources */,
+				0E6DBADE237ADDC500809187 /* Date+UmmAlQura.swift in Sources */,
 				0E34FEE2231E7C66009642EA /* CalendarItemConfigurable.swift in Sources */,
 				0E34FEEA231E8023009642EA /* CalendarSelectionType.swift in Sources */,
 				0E34FEE4231E7FE4009642EA /* CalendarDisplayDataType.swift in Sources */,
@@ -537,7 +541,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.24;
+				MARKETING_VERSION = 0.25;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gbSoft.Calendar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -556,7 +560,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.24;
+				MARKETING_VERSION = 0.25;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gbSoft.Calendar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
