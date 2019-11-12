@@ -96,9 +96,9 @@ extension ViewController: CalendarViewItemProviderDelegate {
     return [MyDateItem.self]
   }
 
-  func calendarView(_ calendarView: CalendarView, didRequestDateItemFor date: Date, calendar: Calendar, locale: Locale) -> CalendarDateItemPresentable {
+  func calendarView(_ calendarView: CalendarView, didRequestDateItemFor date: Date, timeline: Timeline) -> CalendarDateItemPresentable {
     /*create any item from provided array types in func above*/
-    let item = MyDateItem(date: date, calendar: calendar, locale: locale)
+    let item = MyDateItem(date: date, timeline: timeline)
     return item
   }
 
@@ -106,11 +106,10 @@ extension ViewController: CalendarViewItemProviderDelegate {
                     didRequestWeekDayItemFor style: CalendarWeekSymbolType,
                     forWeekNameItem item: CalendarWeekDayViewPosition,
                     poposedName name: String,
-                    calendar: Calendar,
-                    locale: Locale) -> CalendarWeekDayItemPresentable {
+                    timeline: Timeline) -> CalendarWeekDayItemPresentable {
     /*create any item from provided array types in func above*/
     /*check poposedName and style and modify if u want*/
-    let item = MyDateItem(weekDayName: name, calendar: calendar, locale: locale)
+    let item = MyDateItem(weekDayName: name, timeline: timeline)
     return item
   }
 
@@ -147,11 +146,14 @@ Also u can use different options for changing behaviour of app.
   /// If selected `CalendarSelectionType.single`, this option may enable deselect already selected item
   public static let allowSingleDeselectionForSingleMode = CalendarAppearenceOption(rawValue: 1 << 4)
 
+  /// If enabled **showEnclosingMonth** option, day's that are in current month always will display 7 rows
+  public static let showConstantCount = CalendarAppearenceOption(rawValue: 1 << 5)
+
   /// Represent set of minimal (non) option for calendar
   public static let noOption: CalendarAppearenceOption = []
 
   /// Default set of options for calendar - `showEnclosingMonth` and `hightlightCurrentMonth`
-  public static let `default`: CalendarAppearenceOption = [.showEnclosingMonth, .hightlightCurrentMonth, .debugMode]
+  public static let `default`: CalendarAppearenceOption = [.showEnclosingMonth, .hightlightCurrentMonth]
 
 ```
 
