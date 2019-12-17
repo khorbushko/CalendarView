@@ -111,7 +111,7 @@ internal final class UmmAlQuraDateConverter {
   private func daysToUmmAlQura(jdn: Int) -> DateTransfromedComponents {
     let mjdn = jdn - 2400000
     let i = getNewMoonMJDNIndexByJDN(mjdn: mjdn)
-    let totalMonths = i + 16260
+    let totalMonths = i + 15292
     let cYears = Int(totalMonths / 12)
     let hijiryYear = cYears + 1
     let hijiryMonth = totalMonths - 12 * cYears
@@ -147,7 +147,7 @@ internal final class UmmAlQuraDateConverter {
   private func getNewMoonMJDNIndex(hijiryYear: Int, hijiryMonth: Int) -> Int {
     let cYears = hijiryYear - 1
     let totalMonths = (cYears * 12) + 1 + (hijiryMonth - 1)
-    return totalMonths - 16260
+    return totalMonths - 15292
   }
 
   private func hijiryToDays(hijiryYear: Int, hijiryMonth: Int, hijiryDay: Int) -> Int {
