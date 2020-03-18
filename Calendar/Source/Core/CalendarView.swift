@@ -381,6 +381,11 @@ final public class CalendarView: UIView, Nibable {
     return selectedDates
   }
 
+  // MARK: - Date bounds
+    
+  public private (set) var maxDate: Date?
+  public private (set) var minDate: Date?
+  
   // MARK: Lyfecycle
 
   required init?(coder aDecoder: NSCoder) {
@@ -515,6 +520,26 @@ final public class CalendarView: UIView, Nibable {
     if let updatedDate = calendar.date(from: component) {
       switchToDate(updatedDate)
     }
+  }
+  
+  // MARK: - Max and min dates
+  
+  /// Highlight future dates as inactive
+  ///
+  /// Dates will be highlighted during the next collection reload.
+  /// - Parameter maxDate: The last date that should be marked as active.
+
+  func setMaxDate(maxDate: Date) {
+    self.maxDate = maxDate
+  }
+  
+  /// Highlight older dates as inactive
+  ///
+  /// Dates will be highlighted during the next collection reload.
+  /// - Parameter minDate: The first date that should be marked as active.
+  
+  func setMinDate(minDate: Date) {
+    self.minDate = minDate
   }
 
   // MARK: - Navigation
@@ -785,22 +810,34 @@ extension CalendarView: UICollectionViewDataSource {
 
         let configurableCell = cellToReturn as? CalendarItemSelectable
         configurableCell?.setupWith(buildItem)
-
-        let isSelected = selectedDates.contains(where: { calendar.isDate($0, inSameDayAs: dateToShow) })
-        configurableCell?.selectItem(isSelected, item: buildItem)
-
+        
         let isTodayItem = timeline.isDateInToday(dateToShow)
 
         if isTodayItem {
           configurableCell?.markIsTodayCell(buildItem)
         }
+        
+        let isSelected = selectedDates.contains(where: { calendar.isDate($0, inSameDayAs: dateToShow) })
+        configurableCell?.selectItem(isSelected, item: buildItem)
 
         if !isTodayItem,
-            !isSelected,
-              appearenceOptions.showEnclosingMonths,
-                appearenceOptions.hightlightCurrentMonth {
-          let isDateFromNotSelectedMonth = !timeline.displayDatesForCurrentMonth.contains(where: { calendar.isDate($0, inSameDayAs: dateToShow) })
-          configurableCell?.markCellAsInactive(isDateFromNotSelectedMonth, item: buildItem)
+          !isSelected {
+          
+          if appearenceOptions.showEnclosingMonths,
+            appearenceOptions.hightlightCurrentMonth {
+            let isDateFromNotSelectedMonth = !timeline.displayDatesForCurrentMonth.contains(where: { calendar.isDate($0, inSameDayAs: dateToShow) })
+            configurableCell?.markCellAsInactive(isDateFromNotSelectedMonth, item: buildItem)
+          }
+          
+          if let maxDate = maxDate,
+          dateToShow > maxDate {
+            configurableCell?.markCellAsInactive(true, item: buildItem)
+          }
+          
+          if let minDate = minDate,
+           dateToShow < minDate {
+            configurableCell?.markCellAsInactive(true, item: buildItem)
+          }
         }
 
         if let confCell = configurableCell {
