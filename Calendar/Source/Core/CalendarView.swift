@@ -902,6 +902,16 @@ extension CalendarView: UICollectionViewDelegate {
             assertionFailure("invalid cast for selection")
             return
         }
+        
+        var isWithinBounds = true
+        if let maxDate = maxDate,
+          interestedDate > maxDate {
+          isWithinBounds = false
+        }
+        if let minDate = minDate,
+          interestedDate < minDate {
+          isWithinBounds = false
+        }
 
         switch selectionStyle {
           case .single:
@@ -926,7 +936,7 @@ extension CalendarView: UICollectionViewDelegate {
                   appearenceOptions.hightlightCurrentMonth {
                   let isDateFromNotSelectedMonth = !timeline.displayDatesForCurrentMonth.contains(where: { calendar.isDate($0, inSameDayAs: interestedDate) })
 
-                  target.markCellAsInactive(isDateFromNotSelectedMonth, item: buildItem)
+                  target.markCellAsInactive(!isWithinBounds || isDateFromNotSelectedMonth, item: buildItem)
                 }
 
                 dateSelectionDelegate?.calendarView(self, configuredFor: timeline, didDetectDateSelectionChangeFor: interestedDate, selectionType: .deselect)
@@ -963,7 +973,7 @@ extension CalendarView: UICollectionViewDelegate {
                     if appearenceOptions.showEnclosingMonths,
                       appearenceOptions.hightlightCurrentMonth {
                       let isDateFromNotSelectedMonth = !timeline.displayDatesForCurrentMonth.contains(where: { calendar.isDate($0, inSameDayAs: interestedDate) })
-                      target.markCellAsInactive(isDateFromNotSelectedMonth, item: buildItem)
+                      target.markCellAsInactive(!isWithinBounds || isDateFromNotSelectedMonth, item: buildItem)
                     }
                   }
 
