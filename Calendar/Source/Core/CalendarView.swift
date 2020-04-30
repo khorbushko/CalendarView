@@ -478,7 +478,7 @@ final public class CalendarView: UIView, Nibable {
   public func changeCurrentDate(year newYear: CalendarYear) {
     let calendar = timeline.underlineCalendar
 
-    var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: activeDate)
+    var component = calendar.dateComponents([.year], from: activeDate)
     component.year = newYear.value
     if let updatedDate = calendar.date(from: component) {
       switchToDate(updatedDate)
@@ -493,7 +493,7 @@ final public class CalendarView: UIView, Nibable {
   public func changeCurrentDate(month newMonth: CalendarMonth) {
     let calendar = timeline.underlineCalendar
 
-    var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second, .calendar], from: activeDate)
+    var component = calendar.dateComponents([.year, .month], from: activeDate)
     component.month = newMonth.index
     if let updatedDate = calendar.date(from: component) {
       switchToDate(updatedDate)
@@ -509,7 +509,7 @@ final public class CalendarView: UIView, Nibable {
   public func changeCurrentDate(month newMonth: CalendarMonth, year newYear: CalendarYear) {
     let calendar = timeline.underlineCalendar
 
-    var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second, .calendar], from: activeDate)
+    var component = calendar.dateComponents([.year, .month], from: activeDate)
     component.month = newMonth.index
     component.year = newYear.value
     if let updatedDate = calendar.date(from: component) {
