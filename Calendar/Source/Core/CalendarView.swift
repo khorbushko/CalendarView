@@ -529,7 +529,7 @@ final public class CalendarView: UIView, Nibable {
   /// Dates will be highlighted during the next collection reload.
   /// - Parameter maxDate: The last date that should be marked as active.
 
-  func setMaxDate(maxDate: Date) {
+  public func setMaxDate(maxDate: Date) {
     self.maxDate = maxDate
   }
   
@@ -538,7 +538,7 @@ final public class CalendarView: UIView, Nibable {
   /// Dates will be highlighted during the next collection reload.
   /// - Parameter minDate: The first date that should be marked as active.
   
-  func setMinDate(minDate: Date) {
+  public func setMinDate(minDate: Date) {
     self.minDate = minDate
   }
 
