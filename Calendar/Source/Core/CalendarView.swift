@@ -495,6 +495,11 @@ final public class CalendarView: UIView, Nibable {
   /// Selection for dates not changed during this change, will trigger eventDelegate callback
   /// - Parameter newMonth: Object that represent Month, check [CalendarMonth](x-source-tag://3001)
   /// - Version: 0.1
+  /// - Update: 0.30
+
+  @available(*,
+    deprecated,
+    message: "Use a changeCurrentDate(month:year:) instead., may behave incorrectly using custom timeline ")
   public func changeCurrentDate(month newMonth: CalendarMonth) {
     let calendar = timeline.underlineCalendar
 
@@ -512,12 +517,8 @@ final public class CalendarView: UIView, Nibable {
   /// - Parameter newYear: Object that represent Year, check [CalendarYear](x-source-tag://3000)
   /// - Version: 0.1
   public func changeCurrentDate(month newMonth: CalendarMonth, year newYear: CalendarYear) {
-    let calendar = timeline.underlineCalendar
-
-    var component = calendar.dateComponents([.year, .month], from: activeDate)
-    component.month = newMonth.index
-    component.year = newYear.value
-    if let updatedDate = calendar.date(from: component) {
+    if let updatedDate = timeline.generateTargetDateFor(year: newYear.value,
+                                                        month: newMonth.index) {
       switchToDate(updatedDate)
     }
   }
