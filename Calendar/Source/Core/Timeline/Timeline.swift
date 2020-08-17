@@ -262,4 +262,56 @@ extension Timeline {
     }
   }
 
+  /// Recalculate date for current engine while switching date range
+  ///
+  ///
+  /// - Parameter year: Object that represent Year
+  /// - Parameter month: Object that represent Month, `1...12`
+  /// - Parameter day: Object that represent day, default `1`
+  ///
+  /// UNSAFE (this func does not check bounds, if error fatal executed)
+  ///
+  /// - Version: 0.30
+  public func generateTargetDateFor(year: Int, month: Int, day: Int = 1) -> Date? {
+
+    let yearComponent: Int = year
+    let monthComponent: Int = month
+    let dayComponent: Int = day
+
+    var component = calendar.dateComponents([.year, .month, .day], from: activeDate)
+
+    switch identifier {
+      case .system:
+        component.year = yearComponent
+        component.month = monthComponent
+        component.day = dayComponent
+
+        if let updatedDate = calendar.date(from: component) {
+          return updatedDate
+        } else {
+          return nil
+      }
+
+      case .custom(let cutomCalendarEngine):
+        switch cutomCalendarEngine {
+          case .ummAlQura:
+
+            let gregComponents = UmmAlQuraDateConverter()
+              .convertToGregorian(hYear: yearComponent,
+                                  hMonth: monthComponent,
+                                  hDay: dayComponent)
+
+            component.year = gregComponents.2
+            component.month = gregComponents.1
+            component.day = gregComponents.0
+
+            if let gregDate = Calendar(identifier: .gregorian).date(from: component) {
+//              let ummalquraDate = UmmAlQuraDateConverter().convertDateToUmmAlQura(date: gregDate)
+              return gregDate
+            }
+
+            return nil
+      }
+    }
+  }
 }
